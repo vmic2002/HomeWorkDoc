@@ -83,40 +83,27 @@ public class HomeWorkDoc extends GraphicsProgram {
 				char c = ' ';//if any other key than the letters that have been coded
 				//are pressed than space is getting added
 				if (keyCode == KeyEvent.VK_A) {
-					//text.addA(cursor.getX(), cursor.getY()+cursor.getWidth(), cursor.getWidth(), Integer.valueOf(row));
 					c = 'A';
 					System.out.println("A IS ADDED");
 				} else if (keyCode == KeyEvent.VK_B) {
-					//text.addB(cursor.getX(), cursor.getY()+cursor.getWidth(), cursor.getWidth(), Integer.valueOf(row));
 					c = 'B';
 					System.out.println("B IS ADDED");
 				}
 				else if (keyCode == KeyEvent.VK_I) {
-					//text.addI(cursor.getX(), cursor.getY()+cursor.getWidth(), cursor.getWidth(), Integer.valueOf(row));
 					c = 'I';
 					System.out.println("I IS ADDED");
 				}else if (keyCode == KeyEvent.VK_SPACE) {
-					//text.addSpace(cursor.getX(), cursor.getY()+cursor.getWidth(), cursor.getWidth(), Integer.valueOf(row));
 					c = ' ';
 					System.out.println("SPACE IS ADDED");
 				}
 				Helper.addLetter(c);	
 			}
 		}
-
-
 		@Override
-		public void keyReleased(KeyEvent e) {
-		/* Empty body */ }
-
+		public void keyReleased(KeyEvent e) {}
 		@Override
-		public void keyTyped(KeyEvent e) { 
-
-		}
-
+		public void keyTyped(KeyEvent e) {}
 	}
-
-
 
 	private class MyMouseListener implements MouseListener{
 
@@ -125,12 +112,9 @@ public class HomeWorkDoc extends GraphicsProgram {
 			if (text.getTextList().size()==0)
 				return;
 			if(e.getY()<getHeight()-cursor.getWidth()&&e.getX()<getWidth()-cursor.getWidth()) {
-
-
 				int column = (int) (e.getX()/cursor.getWidth());
 				int rowT = (int)( e.getY()/cursor.getHeight());
 				if (getGRectIDAt(1.0*e.getX(), 1.0*e.getY())!=null) {
-
 					cursor.changeLocation(cursor.getWidth()*column, cursor.getHeight()*rowT);
 					coord.row = rowT;
 					coord.col = column;
@@ -159,9 +143,6 @@ public class HomeWorkDoc extends GraphicsProgram {
 			if (x.equals(saveButton)||x.equals(boxSave)) {
 				System.out.println("SAVE TO FILE HERE AHAHAHAHHAHAHAHAHAHAHAHAHAHAHAHHA");
 			}
-
-
-
 		}
 
 		@Override
@@ -210,7 +191,7 @@ public class HomeWorkDoc extends GraphicsProgram {
 		 * if each letter takes size of the cursor, there can be (HEIGHT/cursor.getWidth()-2)  characters per row
 		 * and (WIDTH/cursor.getWidth()-2) characters per column.
 		 */
-		cursor = new Cursor(0, 0, 10);
+		cursor = new Cursor(0, 0, 40);
 		/*
 		 * cursor could be of Class Cursor with a field 
 		 * to delete, move square cursor to the left and delete there and put square cursor back to the right
@@ -233,18 +214,18 @@ public class HomeWorkDoc extends GraphicsProgram {
 		
 		cursor.sendToFront();
 		add(cursor);
-		cursor.scale(4.0);
+		add(cursor.thinCursor);
+
 		System.out.println("CURSOR: "+cursor.getWidth());
 		text = new Text(this.getGCanvas());
 		textList = text.getTextList();
 		
 		Helper.setObjects(text, cursor, saveButton, boxSave, scrollBar, textList, coord, getWidth(), getHeight(), this.getGCanvas());
 		for (int i=0; i<200; i++) {
-			cursor.setFilled(!cursor.isFilled());
+			cursor.thinCursor.setVisible(!cursor.thinCursor.isVisible());
 			pause(300);
-			//System.out.println(">>"+row);
 		}
-		cursor.setFilled(true);
+		cursor.thinCursor.setVisible(true);
 
 		System.out.println("END");
 

@@ -1,4 +1,5 @@
 import acm.graphics.*;
+import java.awt.Color;
 public class Letter {
 	private GRectID grectID;
 	private LineCluster lineCluster;
@@ -22,6 +23,7 @@ public class Letter {
 		return lineCluster;
 	}
 	public void addLine(GLine line) {
+		line.setColor(Color.BLACK);//this is how to change color of letters (not highlighting them)
 		lineCluster.addLine(line);
 		canvas.add(line);
 	}

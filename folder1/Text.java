@@ -12,17 +12,12 @@ public  class Text {
 	Text(GCanvas canvas){
 		this.canvas = canvas;
 		Letter.setCanvas(this.canvas);
-		
-
 	}
 	private static int counter = 0;
-
-
 	public Map<Integer, ArrayList<Letter>> textList = new HashMap<Integer, ArrayList<Letter>>();
-
-	
-	
-
+	public Map<Integer, ArrayList<Letter>> getTextList(){
+		return textList;
+	}
 	public int delete(int id, Integer row) {
 		ArrayList<Letter> l = textList.get(row);
 		if (l==null) {
@@ -48,14 +43,10 @@ public  class Text {
 
 	}
 
-
-
 	public void addSpace(double startX, double startY, double cursorLength, Integer row, int index) {
 		LineCluster lineCluster = new LineCluster(' ');
 		GRectID grectID =new GRectID(startX, startY-cursorLength, cursorLength, cursorLength, counter);//GRectID added to canvas in in Letter setCanvas method 
 		Letter letterSpace = new Letter(lineCluster, grectID);
-
-
 
 		ArrayList<Letter> l = textList.get(row);
 		if (l==null) {
@@ -69,9 +60,7 @@ public  class Text {
 		//letterA doesnt have to be added to correct index in l since list doesnt have to be ordered since each LineCluster has unique ID
 		counter++;//must be add end of every add letter method (addA(), addB()...) once
 	}
-	public Map<Integer, ArrayList<Letter>> getTextList(){
-		return textList;
-	}
+
 
 	public void addLetter(double startX, double startY, double cursorLength, Integer row, char c, int index) {
 		if (c=='A') {
