@@ -31,10 +31,10 @@ public class HomeWorkDoc extends GraphicsProgram {
 	 * 
 	 * maybe have a bar on the side so that you can have like a full on document to scroll up and down with
 	 * 
-	 * try doing this without acm would be actually impressive instead of using acm like a bitch
+	 *
 	 * maybe at some point be able to add images??? would be cool to make it look really similar to real google docs
 	 * 
-	 * maybe move all key event function to another file with abstract class and static methods to have less code in this file
+	 *
 	 * //if no letter is pressed for 5 seconds, 
 	 * make Highlight button with color choices
 	 * just like google doc: add refctangle at each end of page to make it look like there are many pages, 
