@@ -34,6 +34,7 @@ public class Helper {
 	}
 	public static void printOutText() {
 		//textList = text.getTextList();
+		System.out.println("COL"+coord.col+" ROW"+coord.row);
 		if (textList==null||textList.size()==0) {
 			return;
 		}
@@ -49,64 +50,39 @@ public class Helper {
 
 		}
 	}
-	public static void upKey() {
-		if(cursor.getY()>=cursor.getHeight()) {
-			//textList = text.getTextList();
-			ArrayList<Letter> letters = textList.get(Integer.valueOf(coord.row-1));
+	/*
+	@param i - is -1 for upKey and 1 for downKey
+	 */
+	public static void upOrDownKey(int i){
+			ArrayList<Letter> letters = textList.get(Integer.valueOf(coord.row+i));
 			if (letters!=null) {
 				if (letters.size()==0) {
-					cursor.move(0, -cursor.getHeight());
+					cursor.move(0, i*cursor.getHeight());
 					cursor.changeLocation(0, cursor.getY());
 					coord.col = 0;
-
 				} else if (letters.size()-1>=coord.col) {
-					cursor.move(0, -cursor.getHeight());
+					cursor.move(0, i*cursor.getHeight());
 				} else {
 					Letter l = letters.get(letters.size()-1);
-					cursor.changeLocation(l.getGRectID().getX(),l.getGRectID().getY());
+					cursor.changeLocation(l.getGRectID().getX()+cursor.getWidth(),l.getGRectID().getY());
 					coord.col = (int) (cursor.getX()/cursor.getWidth());
 				}
-				//System.out.println("ROW>>"+row);
 			}else {
-				cursor.move(0, -cursor.getHeight());
+				cursor.move(0, i*cursor.getHeight());
 				cursor.changeLocation(0, cursor.getY());
 				coord.col =0;
 			}
-			coord.row--;
+			coord.row+=i;
+	}
 
+	public static void upKey() {
+		if(cursor.getY()>=cursor.getHeight()) {
+			upOrDownKey(-1);
 		}
 	}
 	public static void downKey() {
-
 		if (cursor.getY()<height-3*cursor.getHeight()) {//is 3*cursor.getHeight() so that last row is reserved for buttons to save file and load file
-			//textList = text.getTextList();
-			ArrayList<Letter> letters = textList.get(Integer.valueOf(coord.row+1));
-			if (letters!=null) {
-				if (letters.size()==0) {
-					cursor.move(0, cursor.getHeight());
-					cursor.changeLocation(0, cursor.getY());
-					coord.col = 0;
-
-				} else if (letters.size()-1>=coord.col) {
-					cursor.move(0, cursor.getHeight());
-				} else {
-					Letter l = letters.get(letters.size()-1);
-					cursor.changeLocation(l.getGRectID().getX(),l.getGRectID().getY());
-					coord.col = (int) (cursor.getX()/cursor.getWidth());
-				}
-				//check if row+1 has no letters then cursor goes down and all the way left
-				//check if row+1 has less letters than where cursor would go down to, make cursor go to rightmost position of bottom row
-				//check if row+1 has more letters than where crusor would go down to, make cursor go down once
-
-
-				//MAKE SURE TO GO DOWN AND TO RIGHTMOST AVAILABLE POSITION NOT JSUT STARAIGHT DOWN
-				//System.out.println("ROW>>"+row);
-			} else {
-				cursor.move(0, cursor.getHeight());
-				cursor.changeLocation(0, cursor.getY());
-				coord.col =0;
-			}
-			coord.row++;
+			upOrDownKey(1);
 		}
 	}
 
