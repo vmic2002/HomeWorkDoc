@@ -47,12 +47,10 @@ public class Helper {
 
 			}
 			System.out.println("");
-
 		}
 	}
-	/*
-	@param i - is -1 for upKey and 1 for downKey
-	 */
+
+	//@param i - is -1 for upKey and 1 for downKey
 	public static void upOrDownKey(int i){
 			ArrayList<Letter> letters = textList.get(Integer.valueOf(coord.row+i));
 			if (letters!=null) {
@@ -132,40 +130,26 @@ public class Helper {
 						if (textList.size()==2) {
 							textList.put(Integer.valueOf(textList.size()), textList.get(Integer.valueOf(textList.size()-1)));
 						}
-
-
 						if (textList.get(Integer.valueOf(coord.row)).size()>coord.col){
-
-
 							int x1 = (int) (temp1.get(coord.col).getGRectID().getX()/cursor.getWidth());
-
-
 							for (int i=coord.col; i<temp1.size(); i++) {
-
 								System.out.println(">>"+temp1.get(i).getGRectID().getID());
 								temp.add(temp1.get(i));
 								//System.out.println("x1: "+x1+ " GRectID X: "+ temp1.get(i).getGRectID().getX() + "cursor width: "+cursor.getWidth());
 								temp1.get(i).move(-x1*cursor.getWidth(),cursor.getHeight());
-
 							}
 							textList.put(Integer.valueOf(coord.row+1), temp);
 							ArrayList<Letter> temp2 = new ArrayList<Letter>();
 							ArrayList<Letter> temp3 = textList.get(Integer.valueOf(coord.row));
 							for (int i=0; i<coord.col; i++) {
 								temp2.add(temp3.get(i));
-
 							}
 							textList.put(Integer.valueOf(coord.row), temp2);
 						}
-
 					}
 				}
-
-
 			}
-
 		}
-
 		moveCursorDownAndLeft();
 	}
 
