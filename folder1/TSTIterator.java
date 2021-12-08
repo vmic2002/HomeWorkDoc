@@ -1,7 +1,8 @@
-import java.util.Iterator;
 //import java.util.NoSuchElementException;
 import java.util.ArrayList;
 // add your imports here
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 class TSTIterator<T extends Comparable<T>> implements Iterator<T> {
     // TODO: implement the iterator class here

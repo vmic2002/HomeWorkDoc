@@ -1,7 +1,7 @@
 
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 public class FoodStand extends FoodPlace {
 	FoodStand(String name, double fixedCosts, WorkingOwner owner){
 		super(name, fixedCosts, owner);

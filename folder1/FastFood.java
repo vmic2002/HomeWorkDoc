@@ -1,6 +1,6 @@
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 public class FastFood extends FoodPlace {
 	List<Staff> staff;
 	FastFood(String name, double fixedCosts, Owner owner, List<Staff> staff){

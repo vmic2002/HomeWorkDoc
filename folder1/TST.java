@@ -1,6 +1,6 @@
 
-import java.util.Iterator;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class TST<T extends Comparable<T>> implements Iterable<T>{
 	// root node of the tree
