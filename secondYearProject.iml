@@ -1,27 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<module type="JAVA_MODULE" version="4">
-  <component name="EclipseModuleManager">
-    <libelement value="jar://$USER_HOME$/Downloads/acm.jar!/" />
-    <src_description expected_position="0">
-      <src_folder value="file://$MODULE_DIR$/folder1" expected_position="0" />
-    </src_description>
-  </component>
-  <component name="NewModuleRootManager">
-    <output url="file://$MODULE_DIR$/bin" />
+<module version="4">
+  <component name="NewModuleRootManager" inherit-compiler-output="true">
     <exclude-output />
-    <content url="file://$MODULE_DIR$">
-      <sourceFolder url="file://$MODULE_DIR$/folder1" isTestSource="false" />
+    <content url="file://$MODULE_DIR$/project1">
+      <sourceFolder url="file://$MODULE_DIR$/project1" isTestSource="false" />
     </content>
-    <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="jdk" jdkName="JRE [15.0.1]" jdkType="JavaSDK" />
-    <orderEntry type="module-library">
-      <library name="acm.jar">
-        <CLASSES>
-          <root url="jar://$USER_HOME$/Downloads/acm.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="acm" level="project" />
   </component>
 </module>

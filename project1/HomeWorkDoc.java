@@ -4,9 +4,6 @@ import acm.program.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-
-
-
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
