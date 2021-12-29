@@ -9,35 +9,37 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+/**
+ * @author Victor Micha
+ * will need to save what is written to a file and upload it each time so that
+ * schedule and hw dates aren't lost each time
+ *
+ *
+ * include feature where you can command from the canvas for example if you type //addClass(FACC 300) it would add that class to arraylist of classes
+ * or //saveToFile() or //loadFile()(or use like JButtons would look better)
+ * to save to file or load file, maybe use huffman coding to convert text into 1 and 0s
+ * looks cool and might save space
+ *
+ * every ten seconds or something, check wheter there is a class and due date in the textList Map, if there is
+ * bold them or highlight them. and/or program orders the lines of text by due date
+ * implement auto generated words like once a class is typed, suggest "due date" and then once user types "J" suggest "anuary"
+ *
+ *
+ * maybe have a bar on the side so that you can have like a full on document to scroll up and down with
+ *
+ *
+ * maybe at some point be able to add images??? would be cool to make it look really similar to real google docs
+ *
+ *
+ * //if no letter is pressed for 5 seconds,
+ * make Highlight button with color choices
+ * just like google doc: add rectangle at each end of page to make it look like there are many pages,
+ * so when enter is hit and there is already a line at the last line of page, new page is created and that line goes
+ * to first line of new page
+ */
 
 public class HomeWorkDoc extends GraphicsProgram {
-	/*
-	 * will need to save what is written to a file and upload it each time so that
-	 * schedule and hw dates aren't lost each time
-	 * 
-	 * 
-	 * include feature where you can command from the canvas for example if you type //addClass(FACC 300) it would add that class to arraylist of classes
-	 * or //saveToFile() or //loadFile()
-	 * to save to file or load file, maybe use huffman coding to convert text into 1 and 0s
-	 * looks cool and might save space
-	 * 
-	 * every ten seconds or something, check wheter there is a class and due date in the textList Map, if there is
-	 * bold them or highlight them. and/or program orders the lines of text by due date
-	 * implement auto generated words like once a class is typed, suggest "due date" and then once user types "J" suggest "anuary"
-	 * 
-	 * 
-	 * maybe have a bar on the side so that you can have like a full on document to scroll up and down with
-	 * 
-	 *
-	 * maybe at some point be able to add images??? would be cool to make it look really similar to real google docs
-	 * 
-	 *
-	 * //if no letter is pressed for 5 seconds, 
-	 * make Highlight button with color choices
-	 * just like google doc: add refctangle at each end of page to make it look like there are many pages, 
-	 * so when enter is hit and there is already a line at the last line of page, new page is created and that line goes
-	 * to first line of new page
-	 */
+	private static final long serialVersionUID = 1L;
 	Text text;
 	Cursor cursor;
 	GLabel saveButton;
@@ -106,40 +108,8 @@ public class HomeWorkDoc extends GraphicsProgram {
 
 		@Override
 		public void mouseClicked(MouseEvent e) {
-			if (text.getTextList().size()==0)
-				return;
-			if(e.getY()<getHeight()-cursor.getWidth()&&e.getX()<getWidth()-cursor.getWidth()) {
-				int column = (int) (e.getX()/cursor.getWidth());
-				int rowT = (int)( e.getY()/cursor.getHeight());
-				if (getGRectIDAt(1.0*e.getX(), 1.0*e.getY())!=null) {
-					cursor.changeLocation(cursor.getWidth()*column, cursor.getHeight()*rowT);
-					coord.row = rowT;
-					coord.col = column;
-					return;
-				} else {
-					//else move letter to rightmost available spot on this row(row clicked)
-					ArrayList<Letter> letters = textList.get(Integer.valueOf(rowT));
-					double x ;
-					if (letters==null||letters.size()==0) {
-						x = 0;
-						coord.col = 0;
-					} else {
-						x = letters.get(letters.size()-1).getGRectID().getX();
-						coord.col = (int) (letters.get(letters.size()-1).getGRectID().getX()/cursor.getWidth());
-					}
-					cursor.changeLocation(x, cursor.getHeight()*rowT);
-					coord.row = rowT;
-					return;
-				}
-			}
-			GObject x = getElementAt(e.getX(),e.getY());
-			if (x==null) {
-				System.out.println("CLICKED ON NOTHING");
-				return;
-			}
-			if (x.equals(saveButton)||x.equals(boxSave)) {
-				System.out.println("SAVE TO FILE HERE AHAHAHAHHAHAHAHAHAHAHAHAHAHAHAHHA");
-			}
+			Helper.mouseClicked(e);
+
 		}
 
 		@Override
@@ -148,7 +118,6 @@ public class HomeWorkDoc extends GraphicsProgram {
 			if (x==null)
 				return;
 			else if (x.equals(scrollBar)) {
-
 				scrollBar.setLocation(scrollBar.getX(), e.getY());//not correct
 			}
 
@@ -217,6 +186,9 @@ public class HomeWorkDoc extends GraphicsProgram {
 		text = new Text(this.getGCanvas());
 		textList = text.getTextList();
 		
+	
+		
+		
 		Helper.setObjects(text, cursor, saveButton, boxSave, scrollBar, textList, coord, getWidth(), getHeight(), this.getGCanvas());
 		for (int i=0; i<200; i++) {
 			cursor.thinCursor.setVisible(!cursor.thinCursor.isVisible());
@@ -232,33 +204,7 @@ public class HomeWorkDoc extends GraphicsProgram {
 
 	
 
-	public GRectID getGRectIDAt(double x, double y) {
-		remove(cursor);
-		GObject a = getElementAt(x, y);
-		add(cursor); 
-		if (a!=null){
-			if (a instanceof GLine) {
-				remove(a);
-				remove(cursor);
-				GObject b = getElementAt(x, y);
-				add(cursor);
-				add(a);
-				return ((GRectID) b);
 
-			} else{
-				return ((GRectID) a);
-
-			}
-		}
-		return null;
-	}
-
-	public GRectID getGRectIDAtCursor() {
-
-		return getGRectIDAt(cursor.getX()+0.6*cursor.getWidth(), cursor.getY()+0.6*cursor.getHeight());
-
-
-	}
 
 
 

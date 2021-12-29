@@ -16,7 +16,7 @@ public  class Text {
 		this.canvas = canvas;
 		Letter.setCanvas(this.canvas);
 	}
-	private static int counter = 0;
+	private static int numLetters = 0;
 	public Map<Integer, ArrayList<Letter>> textList = new HashMap<Integer, ArrayList<Letter>>();
 	public Map<Integer, ArrayList<Letter>> getTextList(){
 		return textList;
@@ -46,44 +46,39 @@ public  class Text {
 
 	}
 
-	public void addSpace(double startX, double startY, double cursorLength, Integer row, int index) {
-		LineCluster lineCluster = new LineCluster(' ');
-		GRectID grectID =new GRectID(startX, startY-cursorLength, cursorLength, cursorLength, counter);//GRectID added to canvas in in Letter setCanvas method 
-		Letter letterSpace = new Letter(lineCluster, grectID);
 
+	public void addLetter(double startX, double startY, double cursorLength, Integer row, char c, int index) {
+		LineCluster lineCluster = new LineCluster(c);
+		GRectID grectID =new GRectID(startX, startY-cursorLength, cursorLength, cursorLength, numLetters);//GRectID added to canvas in in Letter setCanvas method
+		Letter letter = getLetter(startX, startY, cursorLength, lineCluster, grectID, c);
 		ArrayList<Letter> l = textList.get(row);
 		if (l==null) {
 			textList.put(row, new ArrayList<Letter>());
 			l = textList.get(row);
 		}
-		l.add(index, letterSpace);
-
+		l.add(index, letter);
 		textList.put(row, l);
-
-		//letterA doesnt have to be added to correct index in l since list doesnt have to be ordered since each LineCluster has unique ID
-		counter++;//must be add end of every add letter method (addA(), addB()...) once
+		numLetters++;
 	}
 
-
-	public void addLetter(double startX, double startY, double cursorLength, Integer row, char c, int index) {
+	public Letter getLetter(double startX, double startY, double cursorLength, LineCluster lineCluster, GRectID grectID, char c){
 		if (c=='A') {
-			addA( startX,  startY,  cursorLength,  row, index);
+			return getLetterA( startX,  startY,  cursorLength,  lineCluster, grectID);
 		} else if (c=='B') {
-			addB(startX,  startY,  cursorLength,  row, index);
+			return getLetterB( startX,  startY,  cursorLength,  lineCluster, grectID);
 		} else if (c=='I') {
-			addI(startX,  startY,  cursorLength,  row, index);
+			return getLetterI(startX,  startY,  cursorLength,  lineCluster, grectID);
 		} else if (c==' ') {
-			addSpace(startX,  startY,  cursorLength,  row, index);
+			return new Letter(lineCluster, grectID);
+		} else {
+			System.out.println("PROBLEM IN TEXT getLetter method");
+			return null;
 		}
 	}
-	
-	public void addA(double startX, double startY, double cursorLength, Integer row, int index) {
-		LineCluster lineCluster = new LineCluster('A');
-		GRectID grectID =new GRectID(startX, startY-cursorLength, cursorLength, cursorLength, counter);//GRectID added to canvas in in Letter setCanvas method 
+
+	public Letter getLetterA(double startX, double startY, double cursorLength, LineCluster lineCluster, GRectID grectID){
 		Letter letterA = new Letter(lineCluster, grectID);
-
 		double x = cursorLength/2;
-
 		GLine a = new GLine(startX, startY, startX+x, startY-2*x);
 		letterA.addLine(a);
 
@@ -92,26 +87,11 @@ public  class Text {
 
 		GLine c = new GLine(startX+x/2, startY-x, startX+1.5*x, startY-x);
 		letterA.addLine(c);
-
-		ArrayList<Letter> l = textList.get(row);
-		if (l==null) {
-			textList.put(row, new ArrayList<Letter>());
-			l = textList.get(row);
-		}
-		l.add(index, letterA);
-
-		textList.put(row, l);
-
-		//letterA doesnt have to be added to correct index in l since list doesnt have to be ordered since each LineCluster has unique ID
-		counter++;//must be add end of every add letter method (addA(), addB()...) once
+		return letterA;
 	}
 
-	public void addB(double startX, double startY, double cursorLength, Integer row, int index) {
-		LineCluster lineCluster = new LineCluster('B');
-		GRectID grectID =new GRectID(startX, startY-cursorLength, cursorLength, cursorLength, counter);//GRectID added to canvas in in Letter setCanvas method 
+	public Letter getLetterB(double startX, double startY, double cursorLength, LineCluster lineCluster, GRectID grectID){
 		Letter letterB = new Letter(lineCluster, grectID);
-
-
 		double x = cursorLength/2;
 		GLine a = new GLine(startX+0.3*x, startY, startX+0.3*x, startY-cursorLength);
 		letterB.addLine(a);
@@ -130,47 +110,10 @@ public  class Text {
 
 		GLine f = new GLine(startX+1.5*x, startY, startX+0.3*x, startY);
 		letterB.addLine(f);
-
-		ArrayList<Letter> l = textList.get(row);
-		if (l==null) {
-			textList.put(row, new ArrayList<Letter>());
-			l = textList.get(row);
-		}
-		l.add(index, letterB);
-
-		textList.put(row, l);
-		counter++;
+		return letterB;
 	}
-	public void getC() {
-		/*
-		 * 	GLine a = new GLine(startX, startY-0.3*cursorLength, startX+cursorLength, startY-0.3*cursorLength);
-		 * 	letterC.addLine(a);
-		canvas.add(a);
-		GLine b = new GLine(startX, startY, startX, startY+cursorLength);
-		letterC.addLine(b);
-		canvas.add(b);
-		GLine c = new GLine(startX, startY-cursorLength, startX+cursorLength, startY-cursorLength);
-		 */
 
-	}
-	public void getD() {
-
-	}
-	public void getE() {
-
-	}
-	public void getF() {
-
-	}
-	public void getG() {
-
-	}
-	public void getH() {
-
-	}
-	public void addI(double startX, double startY, double cursorLength, Integer row, int index) {
-		LineCluster lineCluster = new LineCluster('I');
-		GRectID grectID =new GRectID(startX, startY-cursorLength, cursorLength, cursorLength, counter);//GRectID added to canvas in in Letter setCanvas method 
+	public Letter getLetterI(double startX, double startY, double cursorLength, LineCluster lineCluster, GRectID grectID){
 		Letter letterI = new Letter(lineCluster, grectID);
 
 		GLine a = new GLine(startX+0.5*cursorLength, startY-0.9*cursorLength, startX+0.5*cursorLength, startY-0.1*cursorLength);
@@ -181,68 +124,23 @@ public  class Text {
 
 		GLine c = new GLine(startX+0.1*cursorLength, startY-0.1*cursorLength, startX+0.9*cursorLength, startY-0.1*cursorLength);
 		letterI.addLine(c);
-
-		ArrayList<Letter> l = textList.get(row);
-		if (l==null) {
-			textList.put(row, new ArrayList<Letter>());
-			l = textList.get(row);
-		}
-		l.add(index, letterI);
-
-		textList.put(row, l);
-		counter++;
+		return letterI;
 	}
-	public void getJ() {
+	/*
 
-	}
-	public void getK() {
+	public void getC() {
 
-	}
-	public void getL() {
+		 //	GLine a = new GLine(startX, startY-0.3*cursorLength, startX+cursorLength, startY-0.3*cursorLength);
+	 	//letterC.addLine(a);
+		//canvas.add(a);
+		//GLine b = new GLine(startX, startY, startX, startY+cursorLength);
+		//letterC.addLine(b);
+		//canvas.add(b);
+		//GLine c = new GLine(startX, startY-cursorLength, startX+cursorLength, startY-cursorLength);
 
-	}
-	public void getM() {
-
-	}
-	public void getN() {
-
-	}
-	public void getO() {
-
-	}
-	public void getP() {
-
-	}
-	public void getQ() {
-
-	}
-	public void getR() {
-
-	}
-	public void getS() {
-
-	}
-	public void getT() {
-
-	}
-	public void  getU() {
-
-	}
-	public void  getV() {
-
-	}
-	public void getW() {
-
-	}
-	public void getX() {
-
-	}
-	public void getY() {
-
-	}
-	public void getZ() {
 
 	}
 
+*/
 
 }
