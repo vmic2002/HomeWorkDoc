@@ -70,7 +70,7 @@ public class Helper {
             }
             System.out.println("");
         }
-        System.out.println("LAST ROW IS "+ lastRow);
+        System.out.println("LAST ROW IS " + lastRow);
     }
 
     /**
@@ -118,11 +118,41 @@ public class Helper {
     public static void enter() {
         //need to do text.addBlankLine(row)
         System.out.println("ENTER WAS HIT");
-        lastRow++;
+        System.out.println("SIZE:" + textList.size());
         if (textList.size() != 0) {
-            if (textList.get(Integer.valueOf(textList.size() - 1)) != null) {
-                if (textList.get(Integer.valueOf(textList.size() - 1)).size() != 0) {
-                    double y = textList.get(Integer.valueOf(textList.size() - 1)).get(0).getGRectID().getY();
+            //from coord.row+1 to last row, move each row down and reassign to correct row in textList
+            for (int i = lastRow + 1; i > coord.row + 1; i--) {
+                for (Letter l : textList.get(Integer.valueOf(i - 1))) {
+                    l.move(0, cursor.getHeight());
+                }
+                textList.put(Integer.valueOf(i), textList.get(Integer.valueOf(i - 1)));
+
+            }
+            ArrayList<Letter> letters = new ArrayList<Letter>();
+            ArrayList<Letter> temp = textList.get(Integer.valueOf(coord.row));
+            for (int i = coord.col; i < temp.size(); i++) {
+                letters.add(temp.get(i));
+            }
+            //WHAT IF LETTERS.SIZE()==0??
+            if (letters.size() != 0) {
+                double dx = -letters.get(0).getGRectID().getX();
+
+                for (Letter l : letters) {
+                    l.move(dx, cursor.getHeight());
+                }
+            }
+            textList.put(Integer.valueOf(coord.row + 1), letters);
+            ArrayList<Letter> temp1 = new ArrayList<Letter>();
+            for (int i = 0; i < coord.col; i++) {
+                temp1.add(temp.get(i));
+            }
+            textList.put(Integer.valueOf(coord.row), temp1);
+
+            //row coord.row+1 needs to be moved down and reassigned to coord.row+2
+            //and move all letters to the right and on coord.col in coord.row to coord.row+1
+
+
+                   /* double y = textList.get(Integer.valueOf(textList.size() - 1)).get(0).getGRectID().getY();
                     if (y >= coord.row * cursor.getHeight() && y < height - cursor.getWidth() * 2) {
                         System.out.println("LETTERS SHOULD GO DOWN?");
                         //DOESNT WORK IF THERE IS JUST ONE LINE IE LETTAB.SIZE()==1
@@ -166,11 +196,14 @@ public class Helper {
                             }
                             textList.put(Integer.valueOf(coord.row), temp2);
                         }
-                    }
-                }
-            }
+                    }*/
+
+
         }
+        if (coord.row != lastRow)//if coord.row==lastRow then lastRow++ will be done in moveCursorDownAndLeft()
+            lastRow++;//need to do this since enter key moves each line of letters down
         moveCursorDownAndLeft();
+
     }
 
     public static void deleteKey() {
@@ -240,6 +273,7 @@ public class Helper {
                     System.out.println("NEW CURSOR X >>" + x + " NEW CURSOR Y >> " + y);
                     System.out.println("NEW coord.col >>" + coord.col + " NEW COORD.ROW >> " + coord.row);
                     cursor.changeLocation(x, y);
+                    //NEED TO DO
                     //move all letters below and including coord.row one row up
                     //make a method that does that, once that is done and return method works,
                     //HomeWorkDoc will be pretty functional
@@ -285,7 +319,7 @@ public class Helper {
          * have same value, then changing the value will change it for both keys. this could be
          * potential problem
          */
-      checkIfTooManyLettersInLine();//this method is definitly wrong maybe restart return method almost
+        checkIfTooManyLettersInLine();//this method is definitly wrong maybe restart return method almost
 
     }
 
@@ -401,7 +435,7 @@ public class Helper {
         if (cursor.getY() < height - 3 * cursor.getHeight()) {//is 3*cursor.getHeight() so that last row is reserved for buttons to save file and load file
             cursor.move(0, cursor.getHeight());
             cursor.changeLocation(0, cursor.getY());
-            if (coord.row==lastRow)
+            if (coord.row == lastRow)
                 lastRow++;
             coord.row++;
             coord.col = 0;

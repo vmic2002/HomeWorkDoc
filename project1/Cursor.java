@@ -5,6 +5,7 @@ import acm.graphics.GRect;
 
 public class Cursor extends GRect {
 	GRect thinCursor;
+	//maybe Cursor should have cursor coordinates as field
 	public Cursor(int arg0, int arg1, int arg2) {
 		super(arg0, arg1, arg2, arg2);
 		this.setVisible(false);
