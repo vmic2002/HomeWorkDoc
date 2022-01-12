@@ -61,12 +61,18 @@ public class Helper {
             return;
         }
         for (Integer key : textList.keySet()) {
-            System.out.println("ROW>>" + key + " Size: " + textList.get(key).size());
+            int size;
+            if (textList.get(key)==null)
+                size=0;
+            else
+                size = textList.get(key).size();
+            System.out.println("ROW>>" + key + " Size: " + size);
+            if (textList.get(key)!=null) {
+                for (Letter l : textList.get(key)) {
+                    System.out.print(" CHAR>>" + l.getLineCluster().getChar());
+                    //System.out.print("<<ID>>"+l.getGRectID().getID()+"<<Y>>"+l.getGRectID().getY()+"<<X>>"+l.getGRectID().getX()+"<<");
 
-            for (Letter l : textList.get(key)) {
-                System.out.print(" CHAR>>" + l.getLineCluster().getChar());
-                //System.out.print("<<ID>>"+l.getGRectID().getID()+"<<Y>>"+l.getGRectID().getY()+"<<X>>"+l.getGRectID().getX()+"<<");
-
+                }
             }
             System.out.println("");
         }
@@ -114,9 +120,37 @@ public class Helper {
         }
     }
 
+    public static void leftKey() {
+        if (coord.col > 0) {
+            moveCursorLeft();
+        } else if (coord.row > 0) {
+            ArrayList<Letter> letters = textList.get(Integer.valueOf(coord.row - 1));
+            int column;
+            if (letters == null || letters.size() == 0) {
+                column = 0;
+            } else {
+                column = letters.size();
+            }
+            cursor.changeLocation(column * cursor.getWidth(), cursor.getY() - cursor.getHeight());
+            coord.col = column;
+            coord.row--;
+        }
+    }
+
+    public static void rightKey() {
+        if (cursor.getX() <= width - cursor.getWidth()) {
+            canvas.remove(cursor);
+            GObject o1 = canvas.getElementAt(cursor.getX() + cursor.getWidth() / 2, cursor.getY() + cursor.getHeight() / 2);
+            canvas.add(cursor);
+            if (o1 != null) {
+                moveCursorRight();
+            } else if (coord.row != lastRow) {//reason behind 'if': rightKey shouldn't move cursor down if it is on last row (only return key can)
+                moveCursorDownAndLeft();
+            }
+        }
+    }
 
     public static void enter() {
-        //need to do text.addBlankLine(row)
         System.out.println("ENTER WAS HIT");
         System.out.println("SIZE:" + textList.size());
         if (textList.size() != 0) {
@@ -126,7 +160,6 @@ public class Helper {
                     l.move(0, cursor.getHeight());
                 }
                 textList.put(Integer.valueOf(i), textList.get(Integer.valueOf(i - 1)));
-
             }
             ArrayList<Letter> letters = new ArrayList<Letter>();
             ArrayList<Letter> temp = textList.get(Integer.valueOf(coord.row));
@@ -148,88 +181,14 @@ public class Helper {
             }
             textList.put(Integer.valueOf(coord.row), temp1);
 
-            //row coord.row+1 needs to be moved down and reassigned to coord.row+2
-            //and move all letters to the right and on coord.col in coord.row to coord.row+1
-
-
-                   /* double y = textList.get(Integer.valueOf(textList.size() - 1)).get(0).getGRectID().getY();
-                    if (y >= coord.row * cursor.getHeight() && y < height - cursor.getWidth() * 2) {
-                        System.out.println("LETTERS SHOULD GO DOWN?");
-                        //DOESNT WORK IF THERE IS JUST ONE LINE IE LETTAB.SIZE()==1
-                        if (textList.size() > 2) {
-                            textList.put(Integer.valueOf(textList.size()), textList.get(Integer.valueOf(textList.size() - 1)));
-                            ArrayList<Letter> letters1 = textList.get(Integer.valueOf(textList.size() - 1));
-                            if (letters1.size() > 0) {
-                                for (int j = 0; j < letters1.size(); j++) {
-                                    letters1.get(j).move(0, cursor.getHeight());
-                                }
-                            }
-                            for (int i = textList.size() - 2; i > coord.row + 1; i--) {
-                                ArrayList<Letter> letters = textList.get(Integer.valueOf(i - 1));
-                                if (letters.size() > 0) {
-                                    for (int j = 0; j < letters.size(); j++) {
-                                        letters.get(j).move(0, cursor.getHeight());
-                                    }
-                                }
-                                textList.put(Integer.valueOf(i), textList.get(Integer.valueOf(i - 1)));
-                            }
-                        }
-
-                        ArrayList<Letter> temp = new ArrayList<Letter>();
-                        ArrayList<Letter> temp1 = textList.get(Integer.valueOf(coord.row));
-                        if (textList.size() == 2) {
-                            textList.put(Integer.valueOf(textList.size()), textList.get(Integer.valueOf(textList.size() - 1)));
-                        }
-                        if (textList.get(Integer.valueOf(coord.row)).size() > coord.col) {
-                            int x1 = (int) (temp1.get(coord.col).getGRectID().getX() / cursor.getWidth());
-                            for (int i = coord.col; i < temp1.size(); i++) {
-                                System.out.println(">>" + temp1.get(i).getGRectID().getID());
-                                temp.add(temp1.get(i));
-                                //System.out.println("x1: "+x1+ " GRectID X: "+ temp1.get(i).getGRectID().getX() + "cursor width: "+cursor.getWidth());
-                                temp1.get(i).move(-x1 * cursor.getWidth(), cursor.getHeight());
-                            }
-                            textList.put(Integer.valueOf(coord.row + 1), temp);
-                            ArrayList<Letter> temp2 = new ArrayList<Letter>();
-                            ArrayList<Letter> temp3 = textList.get(Integer.valueOf(coord.row));
-                            for (int i = 0; i < coord.col; i++) {
-                                temp2.add(temp3.get(i));
-                            }
-                            textList.put(Integer.valueOf(coord.row), temp2);
-                        }
-                    }*/
-
-
         }
         if (coord.row != lastRow)//if coord.row==lastRow then lastRow++ will be done in moveCursorDownAndLeft()
             lastRow++;//need to do this since enter key moves each line of letters down
         moveCursorDownAndLeft();
-
     }
 
     public static void deleteKey() {
-
-		/*	if (cursor.getX()==0&&textList!=null) {
-				if (textList.get(Integer.valueOf(coord.row)).size() != 0) {
-					//
-					//need to get letters on coor.row to the right of letters in coord.row-1 if there is enough space
-                    however if there isnt enough space then bring last word on coord.row-1 and put it rigjt in front of
-                    first word on coord.row with no spaces in between. if there is now no more space on coord.row, then
-                    put last word of coord.row at beginning of coord.row+1, continue this loop until there is enough space in one line
-					//if deleting last letters on the last line of do lastRow-- after moving letters on this row up and right
-					 //
-
-				}
-
-				return;
-			}
-
-			*/
-        //canvas.remove(cursor);
-
         GObject a = canvas.getElementAt(cursor.getX() - 0.4 * cursor.getWidth(), cursor.getY() + 0.6 * cursor.getHeight());
-        //cursor.getX()+cursor.getWidth()/2, cursor.getY()+cursor.getHeight()/2);
-        //canvas.add(cursor);
-
         if (a != null) {
             int index2;
             if (a instanceof GLine) {
@@ -240,28 +199,22 @@ public class Helper {
                 canvas.add(a);
                 int id = ((GRectID) b).getID();
                 index2 = text.delete(Integer.valueOf(id), coord.row);
-                //remove(b);
             } else {
-                System.out.println("GOT TO HERE");
                 int id = ((GRectID) a).getID();
                 index2 = text.delete(Integer.valueOf(id), coord.row);
-                //remove(a);
             }
             ArrayList<Letter> tempList = textList.get(Integer.valueOf(coord.row));
             for (int i = index2; i < tempList.size(); i++) {
                 tempList.get(i).move(-cursor.getWidth(), 0);
             }
-
             moveCursorLeft();
         } else {
             System.out.println("OBJECT IS NULL");
             if (coord.col == 0) {//might not be needed since if a==null normally cursor should be at col 0
                 if (coord.row > 0) {
                     //make cursor go to last col on coord.row-1
-                    lastRow--;//SHOULD ONLY EXECUTE WHEN CURSOR IS ON LAST LINE OF TEXTLIST
                     double x;
                     double y = cursor.getY() - cursor.getHeight();
-
                     if (textList.get(Integer.valueOf(coord.row - 1)) == null || textList.get(Integer.valueOf(coord.row - 1)).size() == 0) {
                         x = 0.0;
                     } else {
@@ -273,150 +226,117 @@ public class Helper {
                     System.out.println("NEW CURSOR X >>" + x + " NEW CURSOR Y >> " + y);
                     System.out.println("NEW coord.col >>" + coord.col + " NEW COORD.ROW >> " + coord.row);
                     cursor.changeLocation(x, y);
-                    //NEED TO DO
-                    //move all letters below and including coord.row one row up
-                    //make a method that does that, once that is done and return method works,
-                    //HomeWorkDoc will be pretty functional
-
+                    //now doing what comment below says to do
+                    ArrayList<Letter> temp = textList.get(Integer.valueOf(coord.row+1));
+                    if (temp == null || temp.size() == 0) {
+                        moveRowsUpDeleteHelperMethod(2);
+                    } else {
+                        ArrayList<Letter> lettersOnCursorRow = textList.get(Integer.valueOf(coord.row));
+                        boolean isntFull = false;
+                        int numFreeSpaces = (int)(width/cursor.getWidth()-1)-lettersOnCursorRow.size();
+                        System.out.println("numfreespaces="+numFreeSpaces);
+                        if (lettersOnCursorRow==null||numFreeSpaces>0)
+                            isntFull = true;
+                        if (isntFull){
+                               /* take as many chars from left to right at coord.row+1 and concatenate it
+                        to end of coord.row and also move all letters on coord.row+1
+                            that arent concatenated all the way to the left
+                            (method already does this)
+                             */
+                            int j=0;
+                            for (int i=0; j<numFreeSpaces; i++){
+                                if (i>=temp.size()) {
+                                    break;
+                                }
+                                Letter l = temp.remove(i);
+                                lettersOnCursorRow.add(l);
+                                l.setLocation(width-cursor.getWidth()*(numFreeSpaces-j+1), coord.row* cursor.getHeight());
+                                i--;
+                                j++;
+                            }
+                            if (temp.size()>0){
+                                for (int i=0; i<temp.size(); i++){
+                                    temp.get(i).setLocation(cursor.getWidth()*i,(coord.row+1)*cursor.getHeight());
+                                }
+                            } else{
+                                moveRowsUpDeleteHelperMethod(2);
+                            }
+                        } else{
+                             /*delete last char on coord.row and move first char from coord.row+1 and put it at end of coord.row (cursor should be on this char)
+                                then move each char on coord.row+1 to the left (code below does this) recursively*/
+                            deleteKey();
+                            Letter l = temp.remove(0);
+                            for (int i=0; i<temp.size(); i++){
+                                temp.get(i).move(-cursor.getWidth(),0);
+                            }
+                            lettersOnCursorRow.add(l);
+                            l.setLocation(cursor.getX(), cursor.getY());
+                        }
+                    }
+                }else {
+                    ArrayList<Letter> temp  =textList.get(Integer.valueOf(0));
+                    if (coord.row==0&&temp!=null&&temp.size()==0) {
+                        System.out.println("ON ROW ZERO MOVING ROWS BELOW IT UP");
+                        if (lastRow!=0)
+                            moveRowsUpDeleteHelperMethod(1);
+                    }
                 }
             }
         }
     }
 
-    public static void leftKey() {
-        moveCursorLeft();
-    }
-
-    public static void rightKey() {
-        if (cursor.getX() < width - cursor.getWidth()) {
-            canvas.remove(cursor);
-            GObject o1 = canvas.getElementAt(cursor.getX() + cursor.getWidth() / 2, cursor.getY() + cursor.getHeight() / 2);
-            canvas.add(cursor);
-
-            if (o1 != null) {
-                moveCursorRight();
+    public static void moveRowsUpDeleteHelperMethod(int j){
+        for (int i=coord.row+j; i<=lastRow; i++){
+            ArrayList<Letter> temp1 = textList.get(Integer.valueOf(i));
+            if (temp1!=null) {
+                for (Letter l : temp1) {
+                    l.move(0, -cursor.getHeight());
+                }
             }
+            textList.put(Integer.valueOf(i-1), temp1);
         }
+        System.out.println("LAST ROW IS :"+ lastRow);
+        textList.put(Integer.valueOf(lastRow), null);
+        lastRow--;
     }
 
     public static void addLetter(char c) {
-
         canvas.remove(cursor);
         GObject o = canvas.getElementAt(cursor.getX() + cursor.getWidth() / 2, cursor.getY() + cursor.getHeight() / 2);
         canvas.add(cursor);
         ArrayList<Letter> letters;
         if (o != null) {//if null then must not have Letter there
-            //textList = text.getTextList();
             letters = textList.get(Integer.valueOf(coord.row));
             for (int i = coord.col; i < letters.size(); i++) {
                 letters.get(i).move(cursor.getWidth(), 0);
             }
         }
         text.addLetter(cursor.getX(), cursor.getY() + cursor.getWidth(), cursor.getWidth(), Integer.valueOf(coord.row), c, coord.col);
-        /*
-         * problem of adding last letter to next row could have to do with an arraylist being
-         * referenced by two keys when you are copying them to move every row down, if both keys
-         * have same value, then changing the value will change it for both keys. this could be
-         * potential problem
-         */
-        checkIfTooManyLettersInLine();//this method is definitly wrong maybe restart return method almost
-
-    }
-
-
-    public static void addLastLetterToNextLine(Letter lastLetter) {
-        lastLetter.move(0, cursor.getHeight());
-        while (lastLetter.getGRectID().getX() > 0)
-            lastLetter.move(-cursor.getWidth(), 0);
-        //lastLetter.setLocation(0.0,  lastLetter.getGRectID().getY());
-        ArrayList<Letter> listLetters = textList.get(Integer.valueOf(coord.row + 1));
-        if (listLetters == null)
-            listLetters = new ArrayList<Letter>();
-        //ArrayList<Letter> listLetters = new ArrayList<Letter>();
-        for (Letter l : listLetters)
-            System.out.println(">>" + l.getLineCluster().getChar());
-        listLetters.add(0, lastLetter);
-        textList.put(Integer.valueOf(coord.row + 1), listLetters);
-        if (listLetters.size() > 1) {
-            for (int i = 1; i < listLetters.size(); i++) {
-                listLetters.get(i).move(cursor.getWidth(), 0);
-            }
-
-        }
-        listLetters = textList.get(Integer.valueOf(coord.row));
-        listLetters.remove(lastLetter);
-        textList.put(Integer.valueOf(coord.row), listLetters);
-
-
-        //checkIfTooManyLettersInLine();
+        checkIfTooManyLettersInLine();
     }
 
     public static void checkIfTooManyLettersInLine() {
         ArrayList<Letter> letters = textList.get(Integer.valueOf(coord.row));
         Letter lastLetter = letters.get(letters.size() - 1);
         if (lastLetter.getGRectID().getX() >= width - cursor.getWidth()) {
-            int row = textList.size() - 1;
-            for (int i = row; i >= 0; i--) {
-                if (textList.get(Integer.valueOf(row)).size() != 0) {
-                    row = i;
-                    break;
-                }
-
-            }
-            if (textList.get(Integer.valueOf(row)).get(0).getGRectID().getY() == lastLetter.getGRectID().getY()) {
-                if (lastLetter.getGRectID().getY() < height - 2 * cursor.getWidth()) {
-                    System.out.println("NO PROBLEM");
-                    addLastLetterToNextLine(lastLetter);
-                } else {
-                    System.out.println("case 1: letter cant go down cause there isnt enough space. Need to create new page below.");
-                }
-            } else {
-                double y = textList.get(Integer.valueOf(textList.size() - 1)).get(0).getGRectID().getY();
-                if (y < height - cursor.getWidth() * 2) {
-
-
-                    ArrayList<Letter> letters1 = textList.get(Integer.valueOf(textList.size() - 1));
-
-                    if (letters1.size() > 0) {
-                        for (int j = 0; j < letters1.size(); j++) {
-                            letters1.get(j).move(0, cursor.getHeight());
-                        }
-                    }
-                    textList.put(Integer.valueOf(textList.size()), textList.get(Integer.valueOf(textList.size() - 1)));
-
-                    for (int i = textList.size() - 2; i > coord.row + 1; i--) {
-                        letters = textList.get(Integer.valueOf(i - 1));
-                        if (letters.size() > 0) {
-                            for (int j = 0; j < letters.size(); j++) {
-                                letters.get(j).move(0, cursor.getHeight());
-                            }
-                        }
-                        textList.put(Integer.valueOf(i), textList.get(Integer.valueOf(i - 1)));
-                    }
-
-                    addLastLetterToNextLine(lastLetter);
-
-                } else {
-                    System.out.println("case 2: letter cant go down cause there isnt enough space. Need to create new page below.");
-                }
-            }
+            System.out.println("MUST MOVE LAST LETTER TO NEXT ROW");
             /*
-             * make last letter go down and all the way left, all rows below must be translated down one row
+            all that needs to be done here is bring lastLetter to front of coord.row+1 and move letters on coord.row+1 to the right
+            if there is not enough space on coord.row+1 than take last letter of coord.row+1 and put it to front of coord.row+2
+            if there is not enough space on coord.row+2...
              */
         }
         if (cursor.getX() < width - 2 * cursor.getWidth()) {
             moveCursorRight();
-
         } else {
-            //return
+            //  System.out.println("MOVE CURSOR DOWN AND LEFT");
             moveCursorDownAndLeft();
-
         }
     }
 
 
     public static void moveCursorRight() {
-        if (cursor.getX() < width - 2 * cursor.getWidth()) {
+        if (cursor.getX() < width - cursor.getWidth()) {
             cursor.move(cursor.getWidth(), 0);
             coord.col++;
             //System.out.println("COL>>"+col);
@@ -427,11 +347,12 @@ public class Helper {
         if (cursor.getX() >= cursor.getWidth()) {
             cursor.move(-cursor.getWidth(), 0);
             coord.col--;
-
         }
     }
 
     public static void moveCursorDownAndLeft() {
+        //if statement below might not be useful if we want doc to be infinitely long going downwards
+        //could maybe have buttons on the right or something
         if (cursor.getY() < height - 3 * cursor.getHeight()) {//is 3*cursor.getHeight() so that last row is reserved for buttons to save file and load file
             cursor.move(0, cursor.getHeight());
             cursor.changeLocation(0, cursor.getY());
@@ -480,13 +401,11 @@ public class Helper {
             coord.row = rowT;
             coord.col = column;
         } else {
-
-
             GObject x = canvas.getElementAt(e.getX(), e.getY());
             if (x == null)
                 return;
             if (x.equals(saveButton) || x.equals(boxSave)) {
-                System.out.println("SAVE TO FILE HERE AHAHAHAHHAHAHAHAHAHAHAHAHAHAHAHHA");
+                System.out.println("SAVE TO FILE HERE");
             }
         }
     }
@@ -506,17 +425,12 @@ public class Helper {
 
             } else {
                 return ((GRectID) a);
-
             }
         }
         return null;
     }
 
     public static GRectID getGRectIDAtCursor() {
-
         return getGRectIDAt(cursor.getX() + 0.6 * cursor.getWidth(), cursor.getY() + 0.6 * cursor.getHeight());
-
-
     }
 }
-

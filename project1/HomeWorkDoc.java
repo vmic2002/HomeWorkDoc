@@ -2,9 +2,8 @@
 import acm.graphics.*;
 import acm.program.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
-import java.awt.*;
+import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -44,7 +43,7 @@ public class HomeWorkDoc extends GraphicsProgram {
 	Cursor cursor;
 	GLabel saveButton;
 	GRect boxSave;
-	GRect scrollBar;
+	GRect scrollBar;//not done at all
 	Map<Integer, ArrayList<Letter>> textList;
 	CursorCoordinates coord;
 	//boolean isAtLeft = true;//if col=0 and user clicks left, this bool is true and if delete is pressed then should 
@@ -80,7 +79,8 @@ public class HomeWorkDoc extends GraphicsProgram {
 				Helper.rightKey();
 			}else {	
 				char c = ' ';//if any other key than the letters that have been coded
-				//are pressed than space is getting added
+				//are pressed than space is getting added (except for keys taken care of above:L, UP...)
+				//temporary measure until all letters can be added to textList
 				if (keyCode == KeyEvent.VK_A) {
 					c = 'A';
 					System.out.println("A IS ADDED");
@@ -186,11 +186,11 @@ public class HomeWorkDoc extends GraphicsProgram {
 		text = new Text(this.getGCanvas());
 		textList = text.getTextList();
 		
-	
+		this.setBackground(Color.BLACK);//NOT NECESSARY
 		
 		
 		Helper.setObjects(text, cursor, saveButton, boxSave, scrollBar, textList, coord, getWidth(), getHeight(), this.getGCanvas());
-		for (int i=0; i<200; i++) {
+		for (int i=0; i<200; i++) {//will have to make this run in a while true loop
 			cursor.thinCursor.setVisible(!cursor.thinCursor.isVisible());
 			pause(300);
 		}

@@ -6,8 +6,9 @@ public class Letter {
 	private GRectID grectID;
 	private LineCluster lineCluster;
 	public static GCanvas canvas;
-
-	//maybe need private int id;
+	//could have button "crazy mode" where each letter has a random color
+	//or each line has a random color
+	//random color shouldnt be the same as the background color or else line or letter will disappear
 	Letter(LineCluster lineCluster, GRectID grectID){
 		this.lineCluster = lineCluster;
 		this.grectID = grectID;
@@ -25,7 +26,7 @@ public class Letter {
 		return lineCluster;
 	}
 	public void addLine(GLine line) {
-		line.setColor(Color.BLACK);//this is how to change color of letters (not highlighting them)
+		line.setColor(Color.GREEN);//this is how to change color of letters (not highlighting them)
 		lineCluster.addLine(line);
 		canvas.add(line);
 	}
@@ -36,7 +37,8 @@ public class Letter {
 				l.move(dx,  dy);
 		}
 	}
-	
-	
 
+	public void setLocation(double dx, double dy){
+		move(dx-grectID.getX(),dy-grectID.getY());
+	}
 }

@@ -13,7 +13,7 @@ public class Cursor extends GRect {
 		thinCursor = new GRect(arg0, arg1, 3,arg2);
 	//	thinCursor.sendToFront();
 		//thinCursor.setVisible(true);
-		thinCursor.setColor(Color.BLACK);
+		thinCursor.setColor(Color.GREEN);
 		thinCursor.setFilled(true);
 	}
 
