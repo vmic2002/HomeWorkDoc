@@ -16,7 +16,15 @@ public  class Text {
 		this.canvas = canvas;
 		Letter.setCanvas(this.canvas);
 	}
-	private static int numLetters = 0;
+	class Point{
+		double x;
+		double y;
+		Point(double x, double y){
+			this.x = x;
+			this.y = y;
+		}
+	}
+	private static int numLetters = 0;//is used in delete key method but might be a better way 
 	public Map<Integer, ArrayList<Letter>> textList = new HashMap<Integer, ArrayList<Letter>>();
 	public Map<Integer, ArrayList<Letter>> getTextList(){
 		return textList;
@@ -68,7 +76,15 @@ public  class Text {
 			return getLetterB( startX,  startY,  cursorLength,  lineCluster, grectID);
 		} else if (c=='I') {
 			return getLetterI(startX,  startY,  cursorLength,  lineCluster, grectID);
-		} else if (c==' ') {
+		} else if (c=='C') {
+			return getLetterC(startX,  startY,  cursorLength,  lineCluster, grectID);
+		}else if (c=='D') {
+			return getLetterD(startX,  startY,  cursorLength,  lineCluster, grectID);
+		}else if (c=='E') {
+			return getLetterE(startX,  startY,  cursorLength,  lineCluster, grectID);
+		}else if (c=='F') {
+			return getLetterF(startX,  startY,  cursorLength,  lineCluster, grectID);
+		}else if (c==' ') {
 			return new Letter(lineCluster, grectID);
 		} else {
 			System.out.println("PROBLEM IN TEXT getLetter method");
@@ -76,71 +92,90 @@ public  class Text {
 		}
 	}
 
+	public void addGLines(Point[] points, Letter letter){
+		for (int i=0; i<points.length; i+=2)
+			letter.addLine(new GLine(points[i].x, points[i].y, points[i+1].x, points[i+1].y));
+	}
+
 	public Letter getLetterA(double startX, double startY, double cursorLength, LineCluster lineCluster, GRectID grectID){
 		Letter letterA = new Letter(lineCluster, grectID);
 		double x = cursorLength/2;
-		GLine a = new GLine(startX, startY, startX+x, startY-2*x);
-		letterA.addLine(a);
-
-		GLine b = new GLine(startX+x, startY-2*x,startX+2*x, startY);
-		letterA.addLine(b);
-
-		GLine c = new GLine(startX+x/2, startY-x, startX+1.5*x, startY-x);
-		letterA.addLine(c);
+		Point[] points = {new Point(startX+x/4, startY-x/4), new Point(startX+x, startY-7*x/4),
+				new Point(startX+x, startY-7*x/4), new Point(startX+7*x/4, startY-x/4),
+				new Point(startX+5*x/8, startY-x), new Point(startX+11*x/8, startY-x)};
+		addGLines(points, letterA);
 		return letterA;
 	}
 
 	public Letter getLetterB(double startX, double startY, double cursorLength, LineCluster lineCluster, GRectID grectID){
 		Letter letterB = new Letter(lineCluster, grectID);
 		double x = cursorLength/2;
-		GLine a = new GLine(startX+0.3*x, startY, startX+0.3*x, startY-cursorLength);
-		letterB.addLine(a);
-
-		GLine b = new GLine(startX+0.3*x, startY-cursorLength, startX+x, startY-cursorLength);
-		letterB.addLine(b);
-
-		GLine c = new GLine(startX+x, startY-cursorLength, startX+x, startY-x);
-		letterB.addLine(c);
-
-		GLine d = new GLine(startX+0.3*x, startY-x, startX+1.5*x, startY-x);
-		letterB.addLine(d);
-
-		GLine e = new GLine(startX+1.5*x, startY-x, startX+1.5*x, startY);
-		letterB.addLine(e);
-
-		GLine f = new GLine(startX+1.5*x, startY, startX+0.3*x, startY);
-		letterB.addLine(f);
+		Point[] points = {new Point(startX+0.3*x, startY), new Point(startX+0.3*x, startY-cursorLength),
+				new Point(startX+0.3*x, startY-cursorLength), new Point(startX+x, startY-cursorLength),
+				new Point(startX+x, startY-cursorLength), new Point(startX+x, startY-x),
+				new Point(startX+0.3*x, startY-x), new Point(startX+1.5*x, startY-x),
+				new Point(startX+1.5*x, startY-x), new Point(startX+1.5*x, startY),
+				new Point(startX+1.5*x, startY), new Point(startX+0.3*x, startY)};
+		addGLines(points, letterB);
 		return letterB;
 	}
 
+
+	public Letter getLetterC(double startX, double startY, double cursorLength, LineCluster lineCluster, GRectID grectID){
+		Letter letterC = new Letter(lineCluster, grectID);
+		double x = cursorLength/2;
+		Point[] points = {new Point(startX+7*x/4, startY-7*x/4), new Point(startX+0.25*x, startY-7*x/4),
+				new Point(startX+0.25*x, startY-7*x/4), new Point(startX+0.25*x, startY-0.25*x),
+				new Point(startX+0.25*x, startY-0.25*x), new Point(startX+7*x/4, startY-0.25*x)};
+		addGLines(points, letterC);
+		return letterC;
+	}
+	
+	public Letter getLetterD(double startX, double startY, double cursorLength, LineCluster lineCluster, GRectID grectID){
+		Letter letterD = new Letter(lineCluster, grectID);
+		double x = cursorLength/2;
+		Point[] points = {new Point(startX+x/4, startY-x/4), new Point(startX+x/4, startY-7*x/4),
+				new Point(startX+x/4, startY-7*x/4), new Point(startX+5*x/4, startY-7*x/4),
+				new Point(startX+5*x/4, startY-7*x/4), new Point(startX+7*x/4, startY-5*x/4),
+				new Point(startX+7*x/4, startY-5*x/4), new Point(startX+7*x/4, startY-3*x/4),
+				new Point(startX+7*x/4, startY-3*x/4), new Point(startX+5*x/4, startY-x/4),
+				new Point(startX+5*x/4, startY-x/4), new Point(startX+x/4, startY-x/4)};
+		addGLines(points, letterD);
+		return letterD;
+	}
+	
+	public Letter getLetterE(double startX, double startY, double cursorLength, LineCluster lineCluster, GRectID grectID){
+		Letter letterE = new Letter(lineCluster, grectID);
+		double x = cursorLength/2;
+		Point[] points = {new Point(startX+x/4, startY-x/4), new Point(startX+x/4, startY-7*x/4),
+				new Point(startX+x/4, startY-7*x/4), new Point(startX+7*x/4, startY-7*x/4),
+				new Point(startX+x/4, startY-x), new Point(startX+7*x/4, startY-x),
+				new Point(startX+x/4, startY-x/4), new Point(startX+7*x/4, startY-x/4)};
+		addGLines(points, letterE);
+		return letterE;
+	}
+	
+	public Letter getLetterF(double startX, double startY, double cursorLength, LineCluster lineCluster, GRectID grectID){
+		Letter letterF = new Letter(lineCluster, grectID);
+		double x = cursorLength/2;
+		Point[] points = {new Point(startX+x/4, startY-x/4), new Point(startX+x/4, startY-7*x/4),
+				new Point(startX+x/4, startY-7*x/4), new Point(startX+7*x/4, startY-7*x/4),
+				new Point(startX+x/4, startY-x), new Point(startX+7*x/4, startY-x)};
+		addGLines(points, letterF);
+		return letterF;
+	}
+	
 	public Letter getLetterI(double startX, double startY, double cursorLength, LineCluster lineCluster, GRectID grectID){
 		Letter letterI = new Letter(lineCluster, grectID);
-
-		GLine a = new GLine(startX+0.5*cursorLength, startY-0.9*cursorLength, startX+0.5*cursorLength, startY-0.1*cursorLength);
-		letterI.addLine(a);
-
-		GLine b = new GLine(startX+0.1*cursorLength, startY-0.9*cursorLength, startX+0.9*cursorLength, startY-0.9*cursorLength);
-		letterI.addLine(b);
-
-		GLine c = new GLine(startX+0.1*cursorLength, startY-0.1*cursorLength, startX+0.9*cursorLength, startY-0.1*cursorLength);
-		letterI.addLine(c);
+		Point[] points = {new Point(startX+0.5*cursorLength, startY-0.9*cursorLength), new Point(startX+0.5*cursorLength, startY-0.1*cursorLength),
+				new Point(startX+0.1*cursorLength, startY-0.9*cursorLength), new Point(startX+0.9*cursorLength, startY-0.9*cursorLength),
+				new Point(startX+0.1*cursorLength, startY-0.1*cursorLength), new Point(startX+0.9*cursorLength, startY-0.1*cursorLength)};
+		addGLines(points, letterI);
 		return letterI;
 	}
-	/*
-
-	public void getC() {
-
-		 //	GLine a = new GLine(startX, startY-0.3*cursorLength, startX+cursorLength, startY-0.3*cursorLength);
-	 	//letterC.addLine(a);
-		//canvas.add(a);
-		//GLine b = new GLine(startX, startY, startX, startY+cursorLength);
-		//letterC.addLine(b);
-		//canvas.add(b);
-		//GLine c = new GLine(startX, startY-cursorLength, startX+cursorLength, startY-cursorLength);
 
 
-	}
 
-*/
+
 
 }

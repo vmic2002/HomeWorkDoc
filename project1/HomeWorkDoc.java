@@ -25,16 +25,14 @@ import java.awt.event.MouseListener;
  *
  *
  * maybe have a bar on the side so that you can have like a full on document to scroll up and down with
- *
+ *or an up and down arrow to be clicked when u want to 'scroll' up or down by moving each row up or down
+ * and by rearanging the Map textList
  *
  * maybe at some point be able to add images??? would be cool to make it look really similar to real google docs
  *
  *
  * //if no letter is pressed for 5 seconds,
  * make Highlight button with color choices
- * just like google doc: add rectangle at each end of page to make it look like there are many pages,
- * so when enter is hit and there is already a line at the last line of page, new page is created and that line goes
- * to first line of new page
  */
 
 public class HomeWorkDoc extends GraphicsProgram {
@@ -73,28 +71,32 @@ public class HomeWorkDoc extends GraphicsProgram {
 				Helper.enter();
 			} else if (keyCode == KeyEvent.VK_LEFT) {
 				Helper.leftKey();
-			} else if (keyCode == KeyEvent.VK_C) {//should be DELETE key not C
+			} else if (keyCode == KeyEvent.VK_BACK_SPACE) {
 				Helper.deleteKey();
 			} else if (keyCode == KeyEvent.VK_RIGHT){
 				Helper.rightKey();
-			}else {	
+			} else {
 				char c = ' ';//if any other key than the letters that have been coded
 				//are pressed than space is getting added (except for keys taken care of above:L, UP...)
 				//temporary measure until all letters can be added to textList
 				if (keyCode == KeyEvent.VK_A) {
 					c = 'A';
-					System.out.println("A IS ADDED");
 				} else if (keyCode == KeyEvent.VK_B) {
 					c = 'B';
-					System.out.println("B IS ADDED");
-				}
-				else if (keyCode == KeyEvent.VK_I) {
+				}else if (keyCode == KeyEvent.VK_I) {
 					c = 'I';
-					System.out.println("I IS ADDED");
 				}else if (keyCode == KeyEvent.VK_SPACE) {
 					c = ' ';
-					System.out.println("SPACE IS ADDED");
+				}else if (keyCode == KeyEvent.VK_C) {
+					c = 'C';
+				}else if (keyCode == KeyEvent.VK_D) {
+					c = 'D';
+				}else if (keyCode == KeyEvent.VK_E) {
+					c = 'E';
+				}else if (keyCode == KeyEvent.VK_F) {
+					c = 'F';
 				}
+				System.out.println(c+" IS ADDED");
 				Helper.addLetter(c);	
 			}
 		}
@@ -151,19 +153,13 @@ public class HomeWorkDoc extends GraphicsProgram {
 
 		coord = new CursorCoordinates(0,0);
 		//make button that allows user to change size of cursor
-		//or like G field or some shit
+
 
 		/*
 		 * if each letter takes size of the cursor, there can be (HEIGHT/cursor.getWidth()-2)  characters per row
 		 * and (WIDTH/cursor.getWidth()-2) characters per column.
 		 */
 		cursor = new Cursor(0, 0, 40);
-		/*
-		 * cursor could be of Class Cursor with a field 
-		 * to delete, move square cursor to the left and delete there and put square cursor back to the right
-		 * to add letter, add to the right (square cursors default position is to the right)
-		 */
-		
 
 		saveButton = new GLabel("Save");
 		boxSave = new GRect(10,getHeight()-2*cursor.getHeight(), saveButton.getWidth(), saveButton.getHeight());
@@ -171,7 +167,6 @@ public class HomeWorkDoc extends GraphicsProgram {
 		boxSave.setFilled(true);
 		boxSave.setColor(Color.BLUE);
 		add(saveButton, 10, getHeight()-cursor.getHeight());
-
 
 		scrollBar = new GRect(getWidth()-10, 10, 20, 60);
 		scrollBar.setFilled(true);
@@ -186,9 +181,8 @@ public class HomeWorkDoc extends GraphicsProgram {
 		text = new Text(this.getGCanvas());
 		textList = text.getTextList();
 		
-		this.setBackground(Color.BLACK);//NOT NECESSARY
-		
-		
+		this.setBackground(Color.BLACK);
+
 		Helper.setObjects(text, cursor, saveButton, boxSave, scrollBar, textList, coord, getWidth(), getHeight(), this.getGCanvas());
 		for (int i=0; i<200; i++) {//will have to make this run in a while true loop
 			cursor.thinCursor.setVisible(!cursor.thinCursor.isVisible());
@@ -197,7 +191,6 @@ public class HomeWorkDoc extends GraphicsProgram {
 		cursor.thinCursor.setVisible(true);
 
 		System.out.println("END");
-
 	}
 
 

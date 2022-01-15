@@ -226,7 +226,7 @@ public class Helper {
                     System.out.println("NEW CURSOR X >>" + x + " NEW CURSOR Y >> " + y);
                     System.out.println("NEW coord.col >>" + coord.col + " NEW COORD.ROW >> " + coord.row);
                     cursor.changeLocation(x, y);
-                    //now doing what comment below says to do
+                    
                     ArrayList<Letter> temp = textList.get(Integer.valueOf(coord.row+1));
                     if (temp == null || temp.size() == 0) {
                         moveRowsUpDeleteHelperMethod(2);
