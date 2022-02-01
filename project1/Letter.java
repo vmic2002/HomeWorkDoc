@@ -26,7 +26,7 @@ public class Letter {
 		return lineCluster;
 	}
 	public void addLine(GLine line) {
-		line.setColor(Color.GREEN);//this is how to change color of letters (not highlighting them)
+		line.setColor(Color.WHITE);//this is how to change color of letters (not highlighting them)
 		lineCluster.addLine(line);
 		canvas.add(line);
 	}

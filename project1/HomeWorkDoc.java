@@ -41,7 +41,9 @@ public class HomeWorkDoc extends GraphicsProgram {
 	Cursor cursor;
 	GLabel saveButton;
 	GRect boxSave;
-	GRect scrollBar;//not done at all
+
+	GRect upButton;
+	GRect downButton;
 	Map<Integer, ArrayList<Letter>> textList;
 	CursorCoordinates coord;
 	//boolean isAtLeft = true;//if col=0 and user clicks left, this bool is true and if delete is pressed then should 
@@ -116,13 +118,7 @@ public class HomeWorkDoc extends GraphicsProgram {
 
 		@Override
 		public void mousePressed(MouseEvent e) {
-			GObject x = getElementAt(e.getX(),e.getY());
-			if (x==null)
-				return;
-			else if (x.equals(scrollBar)) {
-				scrollBar.setLocation(scrollBar.getX(), e.getY());//not correct
-			}
-
+		
 		}
 
 		@Override
@@ -161,17 +157,26 @@ public class HomeWorkDoc extends GraphicsProgram {
 		 */
 		cursor = new Cursor(0, 0, 40);
 
+		/**
+		 * save button must be on last col not last row
+		 * just like the upButton and downButton
+		 */
 		saveButton = new GLabel("Save");
 		boxSave = new GRect(10,getHeight()-2*cursor.getHeight(), saveButton.getWidth(), saveButton.getHeight());
-		add(boxSave);
+		//add(boxSave);
 		boxSave.setFilled(true);
 		boxSave.setColor(Color.BLUE);
-		add(saveButton, 10, getHeight()-cursor.getHeight());
-
-		scrollBar = new GRect(getWidth()-10, 10, 20, 60);
-		scrollBar.setFilled(true);
-		scrollBar.setFillColor(Color.red);
-		add(scrollBar);
+		//add(saveButton, 10, getHeight()-cursor.getHeight());
+		double buttonSize  = cursor.getWidth()*2/3;
+		upButton = new GRect(getWidth()-buttonSize, getHeight()/2-buttonSize, buttonSize, buttonSize);
+		upButton.setFilled(true);
+		upButton.setColor(Color.RED);
+		downButton = new GRect(getWidth()-buttonSize, getHeight()/2, buttonSize, buttonSize);
+		downButton.setFilled(true);
+		downButton.setColor(Color.BLUE);
+		
+		add(upButton);
+		add(downButton);
 		
 		cursor.sendToFront();
 		add(cursor);
@@ -183,14 +188,14 @@ public class HomeWorkDoc extends GraphicsProgram {
 		
 		this.setBackground(Color.BLACK);
 
-		Helper.setObjects(text, cursor, saveButton, boxSave, scrollBar, textList, coord, getWidth(), getHeight(), this.getGCanvas());
-		for (int i=0; i<200; i++) {//will have to make this run in a while true loop
-			cursor.thinCursor.setVisible(!cursor.thinCursor.isVisible());
+		Helper.setObjects(text, cursor, saveButton, boxSave, upButton, downButton, textList, coord, getWidth(), getHeight(), this.getGCanvas());
+		while (true) {//will have to make this run in a while true loop
+			//cursor.thinCursor.setVisible(!cursor.thinCursor.isVisible());
+			cursor.setVisible(!cursor.isVisible());
 			pause(300);
 		}
-		cursor.thinCursor.setVisible(true);
-
-		System.out.println("END");
+		//cursor.thinCursor.setVisible(true);
+		
 	}
 
 
