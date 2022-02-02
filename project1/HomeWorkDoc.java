@@ -51,8 +51,8 @@ public class HomeWorkDoc extends GraphicsProgram {
 	//isAtLeft is initialized to true because cursor starts at zeroth col
 	//instead of bool make cursor change proportions like thinner and go close to 
 	//left edge of screen like a google docs cursor
-	public static final int  WIDTH = 50*20;//not sure if static is doing anything cause HomeWorkDoc is never instantiated
-	public static final int HEIGHT = 30*20;
+	public static final int  WIDTH = 25*40;//not sure if static is doing anything cause HomeWorkDoc is never instantiated
+	public static final int HEIGHT = 15*40;
 
 	
 		
@@ -191,7 +191,7 @@ public class HomeWorkDoc extends GraphicsProgram {
 		Helper.setObjects(text, cursor, saveButton, boxSave, upButton, downButton, textList, coord, getWidth(), getHeight(), this.getGCanvas());
 		while (true) {//will have to make this run in a while true loop
 			//cursor.thinCursor.setVisible(!cursor.thinCursor.isVisible());
-			cursor.setVisible(!cursor.isVisible());
+			cursor.thinCursor.setVisible(!cursor.thinCursor.isVisible());
 			pause(300);
 		}
 		//cursor.thinCursor.setVisible(true);

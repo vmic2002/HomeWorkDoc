@@ -1,8 +1,8 @@
 
-import java.awt.Color;
+//import java.awt.Color;
 
 import acm.graphics.GRect;
-import acm.graphics.GCanvas;
+//import acm.graphics.GCanvas;
 public class GRectID extends GRect{
 	/*//trying to pair each GRect with a number and a letter with corresponding number 
 	 * to be able to delete a letter when cursor goes over it

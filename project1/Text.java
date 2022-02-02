@@ -64,7 +64,9 @@ public  class Text {
 			textList.put(row, new ArrayList<Letter>());
 			l = textList.get(row);
 		}
-		l.add(index, letter);
+	
+			l.add(index, letter);
+		
 		textList.put(row, l);
 		numLetters++;
 	}
