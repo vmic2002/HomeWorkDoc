@@ -46,6 +46,17 @@ public class Helper {
 	 * WILL INCREASE LASTROW BY ONE WHEN IT SHOULDNT
 	 * bug is slightly fixed in checkiftoomanyletteras...
 	 *hasmap of hashmap
+	 *
+	 *
+	 *MAYBE USE JPA OR SOMETHING TO USE DATABASES IN THIS PROJECT COULD BE COOL
+	 *could implement auto correct or something
+	 *
+	 *when at row 0 col 0, hitting left key does nothing but it should move the text down if smallestRow<0
+	 *and move cursor to appropriate position
+	 *
+	 *BE ABLE TO DO COMMANT T AND COMMAND W TO OPEN OTHER WINDOWS OF TEXT DOCUMENTS (COULD HAVE A COMMAND THAT OPEN ANOTHER
+	 *WINDOW BUT A GAME SHOWS UP. YOU COULD DO COMMAND W TO GET RID OF IT AND GO BACK TO TEXT WINDOW BUT THIS GAME COUKD BE 
+	 *THE NEXT BIG PROJECT U DO 
 	 */
 
 	public static void setObjects(Text text1, Cursor cursor1, GLabel saveButton1, GRect boxSave1, GRect upButton1, GRect downButton1, Map<Integer, ArrayList<Letter>> textList1, CursorCoordinates coord1, int getWidth, int getHeight, GCanvas g) {

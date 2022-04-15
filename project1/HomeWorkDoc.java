@@ -63,7 +63,7 @@ public class HomeWorkDoc extends GraphicsProgram {
 		public void keyPressed(KeyEvent e) {
 			int keyCode = e.getKeyCode();
 
-			if (keyCode == KeyEvent.VK_L) {
+			if (keyCode == KeyEvent.VK_1) {
 				Helper.printOutText();
 			} else if (keyCode == KeyEvent.VK_UP) {
 				Helper.upKey();
@@ -85,10 +85,6 @@ public class HomeWorkDoc extends GraphicsProgram {
 					c = 'A';
 				} else if (keyCode == KeyEvent.VK_B) {
 					c = 'B';
-				}else if (keyCode == KeyEvent.VK_I) {
-					c = 'I';
-				}else if (keyCode == KeyEvent.VK_SPACE) {
-					c = ' ';
 				}else if (keyCode == KeyEvent.VK_C) {
 					c = 'C';
 				}else if (keyCode == KeyEvent.VK_D) {
@@ -97,6 +93,49 @@ public class HomeWorkDoc extends GraphicsProgram {
 					c = 'E';
 				}else if (keyCode == KeyEvent.VK_F) {
 					c = 'F';
+				}else if (keyCode == KeyEvent.VK_G) {
+					c = 'G';
+				}else if (keyCode == KeyEvent.VK_H) {
+					c = 'H';
+				}else if (keyCode == KeyEvent.VK_I) {
+					c = 'I';
+				}else if (keyCode == KeyEvent.VK_J) {
+					c = 'J';
+				}else if (keyCode == KeyEvent.VK_K) {
+					c = 'K';
+				}else if (keyCode == KeyEvent.VK_L) {
+					c = 'L';
+				}else if (keyCode == KeyEvent.VK_M) {
+					c = 'M';
+				}else if (keyCode == KeyEvent.VK_N) {
+					c = 'N';
+				}else if (keyCode == KeyEvent.VK_O) {
+					c = 'O';
+				}else if (keyCode == KeyEvent.VK_P) {
+					c = 'P';
+				}else if (keyCode == KeyEvent.VK_Q) {
+					c = 'Q';
+				}else if (keyCode == KeyEvent.VK_R) {
+					c = 'R';
+				}else if (keyCode == KeyEvent.VK_S) {
+					c = 'S';
+				}else if (keyCode == KeyEvent.VK_T) {
+					c = 'T';
+				}else if (keyCode == KeyEvent.VK_U) {
+					c = 'U';
+				}else if (keyCode == KeyEvent.VK_V) {
+					c = 'V';
+				}else if (keyCode == KeyEvent.VK_W) {
+					c = 'W';
+				}else if (keyCode == KeyEvent.VK_X) {
+					c = 'X';
+				}else if (keyCode == KeyEvent.VK_Y) {
+					c = 'Y';
+				}else if (keyCode == KeyEvent.VK_Z) {
+					c = 'Z';
+				}
+				else if (keyCode == KeyEvent.VK_SPACE) {
+					c = ' ';
 				}
 				System.out.println(c+" IS ADDED");
 				Helper.addLetter(c);	
@@ -197,13 +236,4 @@ public class HomeWorkDoc extends GraphicsProgram {
 		//cursor.thinCursor.setVisible(true);
 		
 	}
-
-
-
-	
-
-
-
-
-
 }
