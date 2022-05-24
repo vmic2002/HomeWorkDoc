@@ -8,16 +8,16 @@ import java.io.IOException;
 
 public class FileHelper {
 
-	public static void writeToFile(String text, String path) {
+	public static void writeToFile(String text, String path, int numChars) {
 		//path example: /Users/mayanksolanki/Desktop/demo.docx
 
 		
 		// Try block to check for exceptions
 		try {
-
+			System.out.println("BEGINNING WRITE TO FILE FUNCTION");
 			// Step 1: Create an object of BufferedWriter
-			BufferedWriter f_writer = new BufferedWriter(new FileWriter(path));
-
+			BufferedWriter f_writer = new BufferedWriter(new FileWriter(path), numChars);
+			
 			// Step 2: Write text(content) to file
 			f_writer.write(text);
 
@@ -27,10 +27,12 @@ public class FileHelper {
 
 			// Step 4: Display message showcasing
 			// successful execution of the program
+			System.out.println();
 			System.out.println("File is created successfully with the content.");
 
 			// Step 5: Close the BufferedWriter object
 			f_writer.close();
+			System.out.println("END OF WRITE TO FILE FUNCTION");
 		}
 
 		// Catch block to handle if exceptions occurs

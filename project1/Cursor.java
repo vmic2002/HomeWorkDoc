@@ -9,7 +9,7 @@ public class Cursor extends GRect {
 	 */
 	private static final long serialVersionUID = 1L;
 	GRect thinCursor;
-	//maybe Cursor should have cursor coordinates as field
+	//maybe Cursor should have cursor coordinates class as a field
 	public Cursor(int arg0, int arg1, int arg2) {
 		super(arg0, arg1, arg2, arg2);
 		//COMMENTS BELOW THIS ARE TO MAKE CURSOR LOOK LIKE THE CURSOR

@@ -33,6 +33,7 @@ public  class Text {
 	}
 	public int delete(int id, Integer row) {
 		//paramters id and row indicate that this method is called in editing mode
+		//MAYBE DONT NEED GRECTIDS AT ALL IF LETTER IS PASSED AS A PARAMETER
 		ArrayList<Letter> l = textList.get(row);
 		if (l==null) {
 			return 0;

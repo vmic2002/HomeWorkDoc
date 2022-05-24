@@ -5,7 +5,7 @@ import acm.graphics.GLine;
 public class Letter {
 	private GRectID grectID;
 	private LineCluster lineCluster;
-	public static GCanvas canvas;
+	public static GCanvas canvas;//COULD HAVE LIST OF CANVASES IF WE WANT TO IMPLEMENT MUTLIPLE DOCS AT ONCE
 	//could have button "crazy mode" where each letter has a random color
 	//or each line has a random color
 	//random color shouldnt be the same as the background color or else line or letter will disappear

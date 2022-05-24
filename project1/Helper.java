@@ -1,6 +1,7 @@
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.*;
 import java.awt.Color;
 
 import acm.graphics.GCanvas;
@@ -12,28 +13,26 @@ import acm.graphics.GRect;
 public class Helper {
 	static Text text;
 	static Cursor cursor;
-	//TODO
-	static GLabel saveButton;
-	//TODO
-	static GRect boxSave;
-	//TODO
-
 	static Map<Integer, ArrayList<Letter>> textList;
 	static CursorCoordinates coord;
 	static int height;
 	static int width;
 	static GCanvas canvas;
+	static int lastRow;//last row cursor can navigate to
+	static GRect upButton;
+	static GRect downButton;
+	static int smallestRow;
+	
 	static GRect fileWindow;
 	static GRect closeFileWindowButton;
 	static Boolean inFileWindow;
 	static ArrayList<Letter> filePath;
 	static GLabel fileWindowText;
 	static GRect saveToFileButton;
+	static GLabel saveButton;
+	static GRect boxSave;
 
-	static int lastRow;//last row cursor can navigate to
-	static GRect upButton;
-	static GRect downButton;
-	static int smallestRow;
+
 
 
 	/*
@@ -54,10 +53,7 @@ public class Helper {
 	 * BUG WHEN ADDING LETTER TO LAST POSSIBLE ROW ON SCREEN WHEN OTHER LETTERS ARE IN FRONT OF IT
 	 * WILL INCREASE LASTROW BY ONE WHEN IT SHOULDNT
 	 * bug is slightly fixed in checkiftoomanyletteras...
-	 *hasmap of hashmap
 	 *
-	 *
-	 *MAYBE USE JPA OR SOMETHING TO USE DATABASES IN THIS PROJECT COULD BE COOL
 	 *could implement auto correct or something
 	 *
 	 *when at row 0 col 0, hitting left key does nothing but it should move the text down if smallestRow<0
@@ -227,6 +223,8 @@ public class Helper {
 	}
 
 	public static void enter() {
+		if (inFileWindow)
+			return;
 		System.out.println("ENTER WAS HIT");
 		System.out.println("SIZE:" + textList.size());
 		if (textList.size() != 0) {
@@ -784,21 +782,29 @@ public class Helper {
 				String path = "";
 				for (Letter l:filePath)//translate ArrayList<Letter> filePath to string
 					path+=l.getLineCluster().getChar();
-				String textAsString = "";
+				String textAsString;
 				System.out.println("Path is: "+path);
 				//setTextListToString(textAsString);
 				//UNCOMMENT PREVIOUS LINE
 
+				textAsString = setTextListToString();
+				
 				/*
 				 * NEED TO: make sure that setTextListToString and FileHelper.writeToFile(textAsString, path)
 				 * both work
 				 */
 				
-				//FileHelper.writeToFile(textAsString, path);
-				//UNCOMMENT PREVIOUS LINE
+				//System.out.println("PRINTING TEXT AS A STRING:");
+				//System.out.println(textAsString);
+				//System.out.println();
+				//System.out.println("numLetters: "+text.numLetters);
+				
+				FileHelper.writeToFile(textAsString, path, text.numLetters);
+				//is passing text.numLetters always going to ensure that the buffer will be big enough?
 				//MAKE SURE MAX SIZE OF STRING IS BIG ENOUGH FOR THE WHOLE TEXT TO GO IN IT
 				//figure what is the max number of characters that textList should hold
 				//or max number of characters that can be saved to a file
+
 
 				revertBackToEditingMode();
 
@@ -877,36 +883,45 @@ public class Helper {
 		}
 	}
 
-	public static void setTextListToString(String str) {
+	public static String setTextListToString() {
+		
+		String str = "";
 		if (textList == null || textList.size() == 0) {
-			str = " ";
-			//Feauture: trying to save a file if textlist is empty will create a file that is contains just a space
-			return;
+			str = "EMPTY";
+			//Feauture: trying to save a file if textlist is empty will create a file that contains word EMPTY
+			return str;
 		}
-		//NEED TO CHECK WHETHER THE NUMBER OF CHARS IS GETTING TOO BIG FOR A SINGLE STRING TO HOLD
-		//text.numLetters<=String max size?
-
-		for (Integer key : textList.keySet()) {
-			//int size;
-			// if (textList.get(key) == null)
-			//   size = 0;
-			//else
-			//  size = textList.get(key).size();
-			//System.out.println("ROW>>" + key + " Size: " + size);
+		//to check :WHETHER THE NUMBER OF CHARS IS GETTING TOO BIG FOR A SINGLE STRING TO HOLD
+		/*
+		 * The size of int in Java is 4 bytes (included a signed bit, i.e. MSB).
+		 * The range of integer data type is -231 to 231-1 (-2147483648 to 2147483647). 
+		 * Remember that we cannot use negative values for indexing. The indexing is done within the maximum range.
+		 * It means that we cannot store the 2147483648th character. 
+		 * Therefore, the maximum length of String in Java is 0 to 2147483647. 
+		 * So, we can have a String with the length of 2,147,483,647 characters, theoretically.
+		 */
+		//text.numLetters<=Integer.MAX_VALUE
+		
+		Set<Integer> keys = textList.keySet();
+		//ArrayList<Integer> orderedKeys = new ArrayList(new TreeSet(keys));
+		TreeSet<Integer> orderedKeys = new TreeSet(keys);
+		//NOTE: this method only works if the for loop loops through the textList
+		//in increasing order of rows, from smallestRow to lastRow
+		//which is why we are using a TreeSet
+		for (Integer key : orderedKeys) {
 			if (key>=smallestRow && key<=lastRow) {
 				if (textList.get(key) != null) {
 					for (Letter l : textList.get(key)) {
-						//System.out.print(" CHAR>>" + l.getLineCluster().getChar());
-						//System.out.print("<<ID>>"+l.getGRectID().getID()+"<<Y>>"+l.getGRectID().getY()+"<<X>>"+l.getGRectID().getX()+"<<");
-						str+=l.getLineCluster().getChar();
+						str = str + l.getLineCluster().getChar();
 					}
 				}
 				//System.out.println("");
-				str+='\n';
+				if (key!=lastRow)
+					str = str + '\n';
 			}
 		}
-		//NOTE: this method only works if the for loop loops through the textList
-		//in increasing order of rows, from smallestRow to lastRow
+		return str;
+	
 	}
 
 
