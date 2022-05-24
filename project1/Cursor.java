@@ -32,9 +32,15 @@ public class Cursor extends GRect {
 
 	}
 	public void changeLocation(double x, double y) {
+		//does not update cursor coordinates
 		super.setLocation(x, y);
 		thinCursor.setLocation(x,y);
 
+	}
+	
+	public void sendToFront() {
+		super.sendToFront();
+		thinCursor.sendToFront();
 	}
 
 

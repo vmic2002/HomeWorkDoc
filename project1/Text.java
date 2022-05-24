@@ -25,12 +25,14 @@ public  class Text {
 			this.y = y;
 		}
 	}
-	private static int numLetters = 0;//is used in delete key method but might be a better way 
+	private static int id = 0;//is used in delete key method but might be a better way 
+	public int numLetters = 0;
 	public Map<Integer, ArrayList<Letter>> textList = new HashMap<Integer, ArrayList<Letter>>();
 	public Map<Integer, ArrayList<Letter>> getTextList(){
 		return textList;
 	}
 	public int delete(int id, Integer row) {
+		//paramters id and row indicate that this method is called in editing mode
 		ArrayList<Letter> l = textList.get(row);
 		if (l==null) {
 			return 0;
@@ -44,6 +46,7 @@ public  class Text {
 				for (GLine line:cluster.getLines())
 					canvas.remove(line);
 				canvas.remove(grectID);
+				numLetters--;
 				l.remove(letter);//is this really removing cluster from letterTable?
 				textList.put(row, l);
 				return i;
@@ -54,11 +57,13 @@ public  class Text {
 		return 0;
 
 	}
+	
 
-
-	public void addLetter(double startX, double startY, double cursorLength, Integer row, char c, int index) {
+	public void addLetterEditMode(double startX, double startY, double cursorLength, Integer row, char c, int index) {
+		//there are Row or index parameters because this function is only called in editing text mode
 		LineCluster lineCluster = new LineCluster(c);
-		GRectID grectID = new GRectID(startX, startY-cursorLength, cursorLength, cursorLength, numLetters);//GRectID added to canvas in in Letter setCanvas method
+		GRectID grectID = new GRectID(startX, startY-cursorLength, cursorLength, cursorLength, id);//GRectID added to canvas in in Letter setCanvas method
+		id++;
 		Letter letter = getLetter(startX, startY, cursorLength, lineCluster, grectID, c);
 		ArrayList<Letter> l = textList.get(row);
 		if (l==null) {
@@ -70,7 +75,22 @@ public  class Text {
 		
 		textList.put(row, l);
 		numLetters++;
+		
 	}
+	
+	public void addLetterSaveMode(double startX, double startY, double cursorLength, char c, ArrayList<Letter> filePath, int index) {
+		//no Row or index parameters because this function is only called in save file mode
+		//NEED TO FINISH THIS
+		LineCluster lineCluster = new LineCluster(c);
+		//GRectID grectID = new GRectID(startX, startY-cursorLength, cursorLength, cursorLength, id);
+		//passing null grectID might cause a bug when trying to add a null grectID to the canvas
+		GRectID grectID = new GRectID(startX, startY-cursorLength, cursorLength, cursorLength, id);//GRectID added to canvas in in Letter setCanvas method
+		id++;
+		Letter letter = getLetter(startX, startY, cursorLength, lineCluster, grectID, c);
+		System.out.println("INDEX IS : "+index);
+		filePath.add(index, letter);
+	}
+	
 
 	public Letter getLetter(double startX, double startY, double cursorLength, LineCluster lineCluster, GRectID grectID, char c){
 		Letter letter = new Letter(lineCluster, grectID);
@@ -126,6 +146,8 @@ public  class Text {
 			return getLetterY(startX,  startY,  cursorLength,  letter);
 		}else if (c=='Z') {
 			return getLetterZ(startX,  startY,  cursorLength,  letter);
+		}else if (c=='/') {
+			return getLetterSlash(startX,  startY,  cursorLength,  letter);
 		}
 		else {
 			return new Letter(lineCluster, grectID);//so if any other letter is hit space is generated
@@ -412,6 +434,12 @@ public  class Text {
 		return letter;
 	}
 
+	public Letter getLetterSlash(double startX, double startY, double cursorLength, Letter letter){
+		double x = cursorLength/2;
+		Point[] points = {new Point(startX+x/4, startY-x/4), new Point(startX+7*x/4, startY-7*x/4)};
+		addGLines(points, letter);
+		return letter;
+	}
 
 
 }
