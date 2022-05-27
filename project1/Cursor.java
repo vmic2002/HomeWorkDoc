@@ -41,6 +41,12 @@ public class Cursor extends GRect {
 	public void sendToFront() {
 		super.sendToFront();
 		thinCursor.sendToFront();
+		
+	}
+	
+	public void setSize(int x) {
+		super.setSize(x, x);
+		thinCursor.setSize(3, x);
 	}
 
 

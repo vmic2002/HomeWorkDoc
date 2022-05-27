@@ -16,10 +16,9 @@ import java.awt.event.MouseListener;
  *
  * include feature where you can command from the canvas for example if you type //addClass(FACC 300) it would add that class to arraylist of classes
  * or //saveToFile() or //loadFile()(or use like JButtons would look better)
- * to save to file or load file, maybe use huffman coding to convert text into 1 and 0s
- * looks cool and might save space
+ * 
  *
- * every ten seconds or something, check wheter there is a class and due date in the textList Map, if there is
+ * check wheter there is a class and due date in the textList Map, if there is
  * bold them or highlight them. and/or program orders the lines of text by due date
  * implement auto generated words like once a class is typed, suggest "due date" and then once user types "J" suggest "anuary"
  *
@@ -37,15 +36,14 @@ import java.awt.event.MouseListener;
  * a file of the customized characters would have to be saved to the computer
  *
  *
- * try to make this project into an executable or something to have it accessible from the desktop
+ * try to make this project into an executable or app or something to have it accessible from the desktop
  *
- * //if no letter is pressed for 5 seconds,
  * make Highlight button with color choices
  */
 
 public class HomeWorkDoc extends GraphicsProgram {
 	private static final long serialVersionUID = 1L;
-	//consider switching to array of Letter for quicker lookup time
+	
 
 	//possible feature:
 	//boolean isAtLeft = true;//if col=0 and user clicks left, this bool is true and if delete is pressed then should 
@@ -57,6 +55,7 @@ public class HomeWorkDoc extends GraphicsProgram {
 
 	//not sure if static is doing anything cause HomeWorkDoc is never instantiated
 	public static final int CURSOR_SIZE = 20;//was be 40, made it 20 so that more characters could fit in a single line
+	public static final int SAVE_MODE_CURSOR_SIZE = CURSOR_SIZE/2;//cursor is smaller in save mode
 	public static final int  WIDTH = 50*CURSOR_SIZE;//was be 25* CURSOR_SIZE
 	public static final int HEIGHT = 30*CURSOR_SIZE;//was be 15*CURSOR_SIZE
 
@@ -152,8 +151,13 @@ public class HomeWorkDoc extends GraphicsProgram {
 			}else if (keyCode == KeyEvent.VK_SLASH) {
 				c = '/';
 				isLetter = true;
+			}else if (keyCode == KeyEvent.VK_MINUS) {
+				c = '-';
+				isLetter = true;
+			}else if (keyCode == KeyEvent.VK_PERIOD) {
+				c = '.';
+				isLetter = true;
 			}
-			
 			
 			if (isLetter) {
 				System.out.println(c+" IS ADDED");
@@ -173,10 +177,6 @@ public class HomeWorkDoc extends GraphicsProgram {
 			} else if (keyCode == KeyEvent.VK_ENTER) {
 				Helper.enter();
 			} 
-			//NEED TO MAKE SURE THAT WHEN IN FILE WINDOW MODE
-			//HELPER.LEFTKEY, RIGHT KEY, UP KEY, DOWN KEY, ADD LETTER, DELETE LETTER WORK ACCORDINGLY
-			//(DOWN KEY AND UP KEY SHOULDNT DO ANYTHING IN FILE WINDOW MODE)
-			
 			
 		}
 		@Override
@@ -241,15 +241,8 @@ public class HomeWorkDoc extends GraphicsProgram {
 		 * just like the upButton and downButton
 		 */
 		double buttonSize  = cursor.getWidth()*2/3;//buttonSize has to be less than cursor.getWidth
-		//so that last column is reserved for buttons
-		GLabel saveButton = new GLabel("Save");
-		saveButton.setColor(Color.BLUE);
-		GRect boxSave = new GRect(getWidth()-buttonSize,getHeight()/2-3*buttonSize, buttonSize, buttonSize);
-		add(boxSave);
-		boxSave.setFilled(true);
-		boxSave.setColor(Color.GRAY);
-		add(saveButton, boxSave.getX(), boxSave.getY()+buttonSize);
-
+		//so that last column is reserved for buttons\
+		
 
 		GRect upButton = new GRect(getWidth()-buttonSize, getHeight()/2-buttonSize, buttonSize, buttonSize);
 		upButton.setFilled(true);
@@ -261,37 +254,84 @@ public class HomeWorkDoc extends GraphicsProgram {
 		add(upButton);
 		add(downButton);
 
-
-
 		cursor.sendToFront();
 		add(cursor);
 		add(cursor.thinCursor);
+		
+		GLabel saveModeText = new GLabel("Save Text to a File");
+		saveModeText.setColor(Color.WHITE);
+		saveModeText.setLocation(WIDTH/2-saveModeText.getWidth()/2, HEIGHT/4-HEIGHT/16+saveModeText.getHeight()/2);
+		
+		GLabel readModeText = new GLabel("Import Text from a File");
+		readModeText.setColor(Color.WHITE);
+		readModeText.setLocation(WIDTH/2-readModeText.getWidth()/2, HEIGHT/4-HEIGHT/16+readModeText.getHeight()/2);
+		//only one of saveModeText and readModeText will both be on canvas
+		//depending on if in save mode or read mode
 
-		GRect fileWindow = new GRect(WIDTH/4, HEIGHT/4, WIDTH/2, HEIGHT/2);
+		GRect modeTextWindow = new GRect(WIDTH/4, HEIGHT/8, WIDTH/2, HEIGHT/8);
+		modeTextWindow.setFilled(true);
+		modeTextWindow.setColor(Color.GRAY);
+		//modeTextWindow is the rectangle behind the "Save Text to a File" and "Read Text from a File"
+		
+		GLabel saveButton = new GLabel("Save");
+		saveButton.setColor(Color.BLUE);
+		GRect boxSave = new GRect(getWidth()-buttonSize,getHeight()/2-3*buttonSize, buttonSize, buttonSize);
+		add(boxSave);
+		boxSave.setFilled(true);
+		boxSave.setColor(Color.GRAY);
+		add(saveButton, boxSave.getX(), boxSave.getY()+buttonSize);
+		
+		GLabel readButton = new GLabel("Import");
+		readButton.setColor(Color.BLUE);
+		GRect boxRead = new GRect(getWidth()-buttonSize,getHeight()/2-5*buttonSize, buttonSize, buttonSize);
+		add(boxRead);
+		boxRead.setFilled(true);
+		boxRead.setColor(Color.MAGENTA);
+		add(readButton, boxRead.getX(), boxRead.getY()+buttonSize);
+
+
+
+		//GRect fileWindow = new GRect(WIDTH/4, HEIGHT/4, WIDTH/2, HEIGHT/2);
+		GRect fileWindow = new GRect(WIDTH/8, HEIGHT/4, WIDTH*3/4, HEIGHT/2);
 		fileWindow.setFilled(true);
 		fileWindow.setColor(Color.DARK_GRAY);
-		//fileWindow and closeFileWindowButton  and fileWindowText and saveToFileButton 
+		//fileWindow and closeFileWindowButton  and fileWindowText and fileWindowButton 
 		//are added to canvas (ex: add(fileWindow)) in Helper.saveToFile()
 
 		//closeFileWindowButton is to go back to editing the text if save file button was accidently clicked
 		//or user no longer wants to save text to file
-		GRect closeFileWindowButton = new GRect(WIDTH*3/4-1.5*buttonSize, HEIGHT/4+0.5*buttonSize, buttonSize, buttonSize);
+		//GRect closeFileWindowButton = new GRect(WIDTH*3/4-1.5*buttonSize, HEIGHT/4+0.5*buttonSize, buttonSize, buttonSize);
+		GRect closeFileWindowButton = new GRect(WIDTH*7/8-1.5*buttonSize, HEIGHT/4+0.5*buttonSize, buttonSize, buttonSize);
 		closeFileWindowButton.setFilled(true);
 		closeFileWindowButton.setColor(Color.RED);
 		
-		//when saveToFileButton is clicked, then text will be saved to file according to path that user inputed
-		GRect saveToFileButton = new GRect(WIDTH*3/4-1.5*buttonSize, HEIGHT*3/4-1.5*buttonSize, buttonSize, buttonSize);
-		saveToFileButton.setFilled(true);
-		saveToFileButton.setColor(Color.GREEN);
+		//when fileWindowButton is clicked, then text will be saved to file according to path that user inputed
+		//GRect fileWindowButton = new GRect(WIDTH*3/4-1.5*buttonSize, HEIGHT*3/4-1.5*buttonSize, buttonSize, buttonSize);
+		GRect fileWindowButton = new GRect(WIDTH*7/8-1.5*buttonSize, HEIGHT*3/4-1.5*buttonSize, buttonSize, buttonSize);
+		fileWindowButton.setFilled(true);
+		fileWindowButton.setColor(Color.GREEN);
+		//fileWindowButton: is in read mode will import a file if in save mode will save to a file
 		
 		
 		GLabel fileWindowText = new GLabel("Input absolute path: (ex:/Users/mayanksolanki/Desktop/demo.docx)");
 		fileWindowText.setColor(Color.WHITE);
-		fileWindowText.setLocation(WIDTH/4+10, HEIGHT/4+10);
-
+		
+		//fileWindowText.setLocation(WIDTH/4+10, HEIGHT/4+10);
+		fileWindowText.setLocation(WIDTH/2-fileWindowText.getWidth()/2, HEIGHT/4+fileWindowText.getHeight());//+10);
+		
+		GLabel fileWindowErrorMsg = new GLabel("");
+		fileWindowErrorMsg.setColor(Color.WHITE);
+		
+		
 		Boolean inFileWindow = false;
-		//true if user clicked save to file button
+		//true if user clicked save to file button or read from file
 		//false if user is editing text
+		
+		Boolean saveOrReadMode = false;
+		//if inFileWindow is false, then saveOrReadMode value does not matter
+		//if inFileWindow is true, then if saveOrReadMode is true, user clicked on save button
+		//and is in save mode. if saveOrReadMode is false, user clicked on read button and is in read from file mode
+		
 
 
 		ArrayList<Letter> filePath = new ArrayList<Letter>();
@@ -305,13 +345,12 @@ public class HomeWorkDoc extends GraphicsProgram {
 		this.setBackground(Color.BLACK);
 
 		Helper.setObjects(text, cursor, saveButton, boxSave, upButton, downButton, textList, coord, getWidth(),
-				getHeight(), this.getGCanvas(), fileWindow, closeFileWindowButton, inFileWindow, filePath, fileWindowText, saveToFileButton);
-		while (true) {//will have to make this run in a while true loop
-			//cursor.thinCursor.setVisible(!cursor.thinCursor.isVisible());
+				getHeight(), this.getGCanvas(), fileWindow, closeFileWindowButton, inFileWindow, saveOrReadMode, filePath, fileWindowText,
+				fileWindowButton, CURSOR_SIZE, SAVE_MODE_CURSOR_SIZE, fileWindowErrorMsg, saveModeText, modeTextWindow,
+				readButton, boxRead, readModeText);
+		while (true) {
 			cursor.thinCursor.setVisible(!cursor.thinCursor.isVisible());
 			pause(300);
 		}
-		//cursor.thinCursor.setVisible(true);
-
 	}
 }

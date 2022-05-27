@@ -6,18 +6,22 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 
+
+//Some of this code is taken from
+//https://www.geeksforgeeks.org/different-ways-reading-text-file-java/
+import java.nio.file.*;
+
 public class FileHelper {
 
-	public static void writeToFile(String text, String path, int numChars) {
+	public static String writeToFile(String text, String path, int numChars) {
 		//path example: /Users/mayanksolanki/Desktop/demo.docx
 
-		
+
 		// Try block to check for exceptions
 		try {
-			System.out.println("BEGINNING WRITE TO FILE FUNCTION");
 			// Step 1: Create an object of BufferedWriter
 			BufferedWriter f_writer = new BufferedWriter(new FileWriter(path), numChars);
-			
+
 			// Step 2: Write text(content) to file
 			f_writer.write(text);
 
@@ -28,11 +32,12 @@ public class FileHelper {
 			// Step 4: Display message showcasing
 			// successful execution of the program
 			System.out.println();
-			System.out.println("File is created successfully with the content.");
+			String works = "File is created successfully with the content.";
+			System.out.println(works);
 
 			// Step 5: Close the BufferedWriter object
 			f_writer.close();
-			System.out.println("END OF WRITE TO FILE FUNCTION");
+			return works;
 		}
 
 		// Catch block to handle if exceptions occurs
@@ -41,7 +46,30 @@ public class FileHelper {
 			// Print the exception on console
 			// using getMessage() method
 			System.out.println("ERROR COULD NOT SAVE TO FILE");
-			System.out.println(e.getMessage());
+			String err = e.getMessage();
+			System.out.println(err);
+			return err;
+		}
+	}
+
+
+
+	public static String[] getFileAsString(String filePath) {
+		String[] arr = new String[2];
+		//0th element is result 1th element is error msg
+		try {
+			String resu = new String(Files.readAllBytes(Paths.get(filePath)));
+			//System.out.println("File has been successfully imported.");
+			arr[0] = resu;
+			arr[1] = "File has been successfully imported.";
+			return arr;
+		}
+		catch (IOException e) {
+			//System.out.println("ERROR");
+			//System.out.println(e.getMessage());
+			//if there is error then arr[0] will be null  
+			arr[1] = e.getMessage();
+			return arr;
 		}
 	}
 }

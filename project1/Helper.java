@@ -1,6 +1,7 @@
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.*;
 import java.awt.Color;
 
@@ -22,15 +23,28 @@ public class Helper {
 	static GRect upButton;
 	static GRect downButton;
 	static int smallestRow;
-	
+	static GLabel saveButton;
+	static GRect boxSave;
+
 	static GRect fileWindow;
 	static GRect closeFileWindowButton;
 	static Boolean inFileWindow;
+	static Boolean saveOrReadMode;
 	static ArrayList<Letter> filePath;
 	static GLabel fileWindowText;
-	static GRect saveToFileButton;
-	static GLabel saveButton;
-	static GRect boxSave;
+	static GRect fileWindowButton;
+	static GLabel fileWindowErrorMsg;
+	static GLabel saveModeText;
+	static GLabel readModeText;
+	static GRect modeTextWindow;
+
+	static int editModeCursorSize;
+	static int saveModeCursorSize;
+
+	static GLabel readButton;
+	static GRect boxRead;
+
+
 
 
 
@@ -66,8 +80,10 @@ public class Helper {
 
 	public static void setObjects(Text text1, Cursor cursor1, GLabel saveButton1, GRect boxSave1, GRect upButton1, 
 			GRect downButton1, Map<Integer, ArrayList<Letter>> textList1, CursorCoordinates coord1, int getWidth, 
-			int getHeight, GCanvas g, GRect fileWindow1, GRect closeFileWindowButton1, Boolean inFileWindow1,
-			ArrayList<Letter> filePath1, GLabel fileWindowText1, GRect saveToFileButton1) {
+			int getHeight, GCanvas g, GRect fileWindow1, GRect closeFileWindowButton1, Boolean inFileWindow1, Boolean saveOrReadMode1,
+			ArrayList<Letter> filePath1, GLabel fileWindowText1, GRect fileWindowButton1, int editModeCursorSize1,
+			int saveModeCursorSize1, GLabel fileWindowErrorMsg1, GLabel saveModeText1, GRect modeTextWindow1,
+			GLabel readButton1, GRect boxRead1, GLabel readModeText1) {
 		text = text1;
 		cursor = cursor1;
 		saveButton = saveButton1;
@@ -84,13 +100,21 @@ public class Helper {
 		fileWindow = fileWindow1;
 		closeFileWindowButton = closeFileWindowButton1;
 		inFileWindow = inFileWindow1;
+		saveOrReadMode = saveOrReadMode1;
 		filePath = filePath1;
 		fileWindowText = fileWindowText1;
-		saveToFileButton = saveToFileButton1;
+		fileWindowButton = fileWindowButton1;
+		editModeCursorSize = editModeCursorSize1;
+		saveModeCursorSize = saveModeCursorSize1;
+		fileWindowErrorMsg = fileWindowErrorMsg1;
+		saveModeText = saveModeText1;
+		modeTextWindow = modeTextWindow1;
+		readButton = readButton1;
+		boxRead = boxRead1;
+		readModeText = readModeText1;
 	}
 
 	public static void printOutText() {
-
 		System.out.println("COL" + coord.col + " ROW" + coord.row);
 		if (textList == null) {
 			System.out.println("textListNull");
@@ -183,7 +207,8 @@ public class Helper {
 
 	public static void leftKey() {
 		if (inFileWindow) {
-			if ((int) (cursor.getX()/cursor.getWidth()) > (int) ((width/4)/cursor.getWidth())+1)
+			//if ((int) (cursor.getX()/cursor.getWidth()) > (int) ((width/4)/cursor.getWidth())+1)
+			if (getCurrentColSaveMode()!=0)
 				cursor.move(-cursor.getWidth(), 0);//not using moveCursorLeft() because there is no need to update coord.row or coord.col in save mode
 			return;
 		}
@@ -205,8 +230,9 @@ public class Helper {
 
 	public static void rightKey() {
 		if (inFileWindow) {
-			int currentCol  = (int) (cursor.getX()/cursor.getWidth()) - (int) ((width/4)/cursor.getWidth())-1;
-			if (cursor.getX() < width*3/4 - 2*cursor.getWidth()&&currentCol<filePath.size())
+			//int currentCol  = (int) (cursor.getX()/cursor.getWidth()) - (int) ((width/4)/cursor.getWidth())-1;
+			//if (cursor.getX() < width*3/4 - 2*cursor.getWidth()&&currentCol<filePath.size())
+			if (cursor.getX() < width*7/8 - 2*cursor.getWidth()&&getCurrentColSaveMode()<filePath.size())//7/8 because saveFileWindow is 6/8*Width long
 				cursor.move(cursor.getWidth(), 0);//not using moveCursorRight() because there is no need to update coord.row or coord.col in save mode
 			return;
 		}
@@ -450,13 +476,18 @@ public class Helper {
 	}
 
 	public static void deleteKeyInSaveMode() {
-		int currentCol  = (int) (cursor.getX()/cursor.getWidth()) - (int) ((width/4)/cursor.getWidth())-1;
+		//int currentCol  = (int) (cursor.getX()/cursor.getWidth()) - (int) ((width/4)/cursor.getWidth())-1;
+
 		//currentCol = i refers to ith index of filePath
+		int currentCol = getCurrentColSaveMode();
 		if (currentCol>0) {
 			//does nothing if currentCol is 0
 			//delete key at current col and move all keys that need to be moved to the left
 			System.out.println("CURRENT COL is: "+currentCol);
-			deleteLetter(currentCol-1);
+			//	deleteLetter(currentCol-1);
+			Letter letter = filePath.get(currentCol-1);
+			deleteLetter(letter);
+			filePath.remove(letter);
 			for (int i = currentCol-1; i<filePath.size(); i++)
 				filePath.get(i).move(-cursor.getWidth(), 0);
 			cursor.move(-cursor.getWidth(), 0);
@@ -464,27 +495,25 @@ public class Helper {
 		}
 	}
 
+
+
 	/**
 	 * 
-	 * @param key index of value to delete in ArrayList<Letter> filePath
+	 * @param letter to be removed from canvas
 	 */
-	public static void deleteLetter(int key) {
-		//System.out.println("KEY IS : "+ key);
-		Letter letter = filePath.get(key);
+	public static void deleteLetter(Letter letter) {
 		GRectID grectID = letter.getGRectID();
 		LineCluster cluster = letter.getLineCluster();
 		for (GLine line:cluster.getLines())
 			canvas.remove(line);
 		canvas.remove(grectID);
-		filePath.remove(letter);
 
 	}
 
 
 	public static void addLetter(char c) {
-		//NEED TO: if inFileWindow -> add letter to canvas but also to ArrayList<Letter> filePath
 
-		//if inFileWindow is false, then HomeWorkDoc is in editing mode, not saving mode
+		//if inFileWindow is false, then HomeWorkDoc is in editing mode, not saving mode or read from file mode
 
 		if (inFileWindow)
 			addLetterSavingMode(c);
@@ -499,7 +528,8 @@ public class Helper {
 		GObject o = canvas.getElementAt(cursor.getX() + cursor.getWidth() / 2, cursor.getY() + cursor.getHeight() / 2);
 		canvas.add(cursor);
 
-		int currentCol  = (int) (cursor.getX()/cursor.getWidth()) - (int) ((width/4)/cursor.getWidth())-1;
+		//int currentCol  = (int) (cursor.getX()/cursor.getWidth()) - (int) ((width/4)/cursor.getWidth())-1;
+		int currentCol  = getCurrentColSaveMode();
 		if (o != null) {//if null then must not have <Letter> there
 
 
@@ -508,14 +538,15 @@ public class Helper {
 				System.out.println("LETTER IS :" + filePath.get(i).getLineCluster().getChar());
 			}
 			//checkIfTooManyLettersInLine
-			if (filePath.size()>=(width/2)/cursor.getWidth()-2) {
-				//NEED TO DELETE last element in filePath
-				deleteLetter(filePath.size()-1);
+			//if (filePath.size()>=(width/2)/cursor.getWidth()-2) {
+			if (filePath.size()>=(width*3/4)/cursor.getWidth()-2) {
+				//must delete last element in filePath
 			}
 		}
 
-		text.addLetterSaveMode(cursor.getX(), cursor.getY() + cursor.getWidth(), cursor.getWidth(), c, filePath, currentCol);
-		if (cursor.getX() < width*3/4-2*cursor.getWidth())  {
+		text.addLetterSaveMode(cursor.getX(), cursor.getY() + cursor.getWidth(), saveModeCursorSize, c, filePath, currentCol);
+		//if (cursor.getX() < width*3/4-2*cursor.getWidth())  {
+		if (cursor.getX() < width*7/8-2*cursor.getWidth())  {
 			cursor.move(cursor.getWidth(), 0);
 			//not using moveCursorRight() because there is no need to update coord.row or coord.col in save mode
 		}//else the cursor can only move left if user hits the left key
@@ -545,7 +576,8 @@ public class Helper {
 		//System.out.println("COLLLLLLLL: " + coord.col + " letter: " + c);
 		text.addLetterEditMode(cursor.getX(), cursor.getY() + cursor.getWidth(), cursor.getWidth(), Integer.valueOf(coord.row), c, coord.col);
 		//checkIfTooManyLettersInLine();
-		if (cursor.getX() < width - 2 * cursor.getWidth()){
+		//if (cursor.getX() < width - 2 * cursor.getWidth()){
+		if (cursor.getX() < width -  cursor.getWidth()){
 			moveCursorRight();
 		} else {
 			//System.out.println("GOT HEREREREREERERERRERERERRERERET");
@@ -562,7 +594,6 @@ public class Helper {
 
 			} else {
 				moveCursorDownAndLeft();
-				//System.out.println("22222222ERRORORORROROROROROROROROROROROROR");
 			}
 			ArrayList<Letter> temp = textList.get(Integer.valueOf(coord.row));
 			if ((temp == null || temp.size() == 0) && coord.row < lastRow) {
@@ -686,12 +717,7 @@ public class Helper {
 	}
 
 	public static void moveCursorDownAndLeft() {
-		//if statement below might not be useful if we want doc to be infinitely long going downwards
-		//could maybe have buttons on the right or something
-		//if (cursor.getY() < height-cursor.getHeight()) {
-		if (cursor.getY() < height - cursor.getHeight()) {
-			System.out.println("IN BOUNDSS");
-		}
+
 		System.out.println("EXECUTING MOVE CURSOR DOWN AND LEFT");
 		cursor.move(0, cursor.getHeight());
 		cursor.changeLocation(0, cursor.getY());
@@ -738,37 +764,195 @@ public class Helper {
 		canvas.remove(closeFileWindowButton);
 		canvas.remove(fileWindow);
 		canvas.remove(fileWindowText);
-		canvas.remove(saveToFileButton);
+		canvas.remove(fileWindowButton);
+		canvas.remove(fileWindowErrorMsg);
+		canvas.remove(modeTextWindow);
+		if (saveOrReadMode)
+			canvas.remove(saveModeText);
+		else
+			canvas.remove(readModeText);
+		fileWindowErrorMsg.setLabel("");
 		inFileWindow = false;
+		cursor.setSize(editModeCursorSize);
+
+
+		//to put cursor back to its original location since coord.col and coord.row dont change while in save mode
 		cursor.changeLocation(coord.col*cursor.getWidth(), coord.row*cursor.getHeight());
+
+
 		//coord.row = 0;
 		//coord.col = 0;
 		if (filePath.size()!=0) {
 			for (int i=filePath.size()-1; i>=0; i--) {
 				//System.out.println("INDEX I ISSSS: "+i);
-				deleteLetter(i);
+				//deleteLetter(i);
+				Letter letter = filePath.get(i);
+				deleteLetter(letter);
+				filePath.remove(letter);
+
 			}
 		}
 	}
 
-	public static void revertBackToSavingMode() {
+	/**
+	 * 
+	 * @param b true if in save mode false if in read/import mode
+	 */
+	public static void revertBackToFileMode(boolean b) {
 		//this function allows user to go back to saving mode
 		//from edit text mode
 		canvas.add(fileWindow);
 		canvas.add(closeFileWindowButton);
-		canvas.add(saveToFileButton);
-		saveToFileButton.sendToFront();
+		canvas.add(fileWindowButton);
+		fileWindowButton.sendToFront();
 		canvas.add(fileWindowText);
+		canvas.add(fileWindowErrorMsg);
+		canvas.add(modeTextWindow);
+		if (b)
+			canvas.add(saveModeText);
+		else
+			canvas.add(readModeText);
 		inFileWindow = true;
+		saveOrReadMode = b;
+		System.out.println("SAVE OR READ MODE IS: "+saveOrReadMode);
 		cursor.sendToFront();
-		cursor.changeLocation(width/4+cursor.getWidth(),height/4+cursor.getHeight());
+		cursor.setSize(saveModeCursorSize);
+		//cursor.changeLocation(width/4+cursor.getWidth(),height/4+editModeCursorSize);
+		cursor.changeLocation(width/8+cursor.getWidth(),height/4+2*editModeCursorSize);
 		//no need to update coord.row or coord.col because in saving mode they are not used
 		//set cursor to appropriate location so user can input file path in reverbackToSaving()
 	}
 
+	/**
+	 * 
+	 * @param path File path
+	 * @return error/success message
+	 */
+	public static String saveToFile(String path) {
+		String textAsString;
+		textAsString = setTextListToString();
+		return FileHelper.writeToFile(textAsString, path, text.numLetters);
+	}
+
+	/**
+	 * 
+	 * @param path File path
+	 * @return error/success message
+	 */
+	public static String readFromFile(String path) {
+
+
+		String[] arr = FileHelper.getFileAsString(path);
+		System.out.println("PRINTING FILE METHOD");
+		System.out.println(arr[0]);
+		//if there is error then arr[0] will be null  
+		System.out.println("END OF file");
+		System.out.println("ERRORMSG: "+arr[1]);
+		if (arr[0]!= null) {
+			/* TRANSLATE STRING ARR[0] AS TEXT IN HOMEWORKDOC
+			 * USING CURSOR AND ADD LETTERIN EDIT MODE
+			 * AT END OF EACH LINE USE RETURN KEY
+			 * go back to edit mode and translate string into text in homework doc editor
+			 * then go back to file mode so that the user can see the displayed error message (arr[1]): "File successfully imported"
+			 * then user must exit file mode to go back to editing mode to see the imported text.
+			 * 
+			 */
+			String fileAsString = arr[0];
+			revertBackToEditingMode();
+
+
+
+
+			for (Integer i : textList.keySet()) {
+				if (textList.get(i)!=null) {
+					for (Letter l : textList.get(i)) {
+						deleteLetter(l);
+					}
+				}
+				textList.put(i, new ArrayList<Letter>());
+				//any text that was in text editor is not saved and deleted
+				//maybe would want to implement a backup so that text can be recuperated
+			}
+			lastRow = 0;
+			smallestRow = 0;
+			cursor.changeLocation(0, 0);
+			coord.row = 0;
+			coord.col = 0;
+			//by now text editor is empty and re initialized
+
+			for (int i = 0; i<fileAsString.length(); i++) {
+				char c = fileAsString.charAt(i);
+
+				if (c=='\n') {
+					enter();
+					//System.out.println();
+				}
+				else {
+					c = Character.toUpperCase(c);//because un capitalized letters arent supported
+					//by homeworkdoc yet 
+					
+					addLetterEditingMode(c);
+					//System.out.print(c);
+					//if char is unknown, X will be printed to text
+				}
+
+			}
+
+			//while loops scrolls text so user sees the top
+			//System.out.println("SMALLEST ROW IS " + smallestRow);
+			while (smallestRow < 0) {
+				moveTextDown(smallestRow);
+				smallestRow++;
+				//System.out.println("SMALLEST ROW IS " + smallestRow);
+			}
+
+			cursor.changeLocation(0, 0);
+			coord.row = 0;
+			coord.col = 0;
+
+			revertBackToFileMode(false);
+
+
+			
+		}
+		return arr[1];
+	}
+
+	public static void fileWindowButtonPressed() {
+		System.out.println("FILE BUTTON PRESSED");
+
+
+		String path = "";
+		for (Letter l:filePath)//translate ArrayList<Letter> filePath to string
+			path+=l.getLineCluster().getChar();
+
+		System.out.println("Path is: "+path);
+
+		String error;
+		String result= "";
+		if (saveOrReadMode) {
+			error = saveToFile(path);
+		} else {
+			error = readFromFile(path);
+		}
+
+		//is passing text.numLetters always going to ensure that the buffer will be big enough?
+		//MAKE SURE MAX SIZE OF STRING IS BIG ENOUGH FOR THE WHOLE TEXT TO GO IN IT
+		//figure what is the max number of characters that textList should hold
+		//or max number of characters that can be saved to a file
+
+		fileWindowErrorMsg.setLabel(error);
+		fileWindowErrorMsg.setLocation(width/2-fileWindowErrorMsg.getWidth()/2, height*3/4);//-fileWindowErrorMsg.getHeight());
+		//revertBackToEditingMode() is only done once user clicks red box to exit save mode
+
+	}
+
+
+
+
 	public static void mouseClicked(MouseEvent e) {
-		if (textList.size() == 0)
-			return;
+		//if (textList.size() == 0)
+		//	return;
 		if (inFileWindow) {
 			GObject x = canvas.getElementAt(e.getX(), e.getY());
 			if (x == null)
@@ -776,38 +960,8 @@ public class Helper {
 			if (x.equals(closeFileWindowButton)) {
 				System.out.println("closeFileWindowButton PRESSED");
 				revertBackToEditingMode();
-			} else if (x.equals(saveToFileButton)) {
-				System.out.println("SAVE TO FILE BUTTON PRESSED");
-
-				String path = "";
-				for (Letter l:filePath)//translate ArrayList<Letter> filePath to string
-					path+=l.getLineCluster().getChar();
-				String textAsString;
-				System.out.println("Path is: "+path);
-				//setTextListToString(textAsString);
-				//UNCOMMENT PREVIOUS LINE
-
-				textAsString = setTextListToString();
-				
-				/*
-				 * NEED TO: make sure that setTextListToString and FileHelper.writeToFile(textAsString, path)
-				 * both work
-				 */
-				
-				//System.out.println("PRINTING TEXT AS A STRING:");
-				//System.out.println(textAsString);
-				//System.out.println();
-				//System.out.println("numLetters: "+text.numLetters);
-				
-				FileHelper.writeToFile(textAsString, path, text.numLetters);
-				//is passing text.numLetters always going to ensure that the buffer will be big enough?
-				//MAKE SURE MAX SIZE OF STRING IS BIG ENOUGH FOR THE WHOLE TEXT TO GO IN IT
-				//figure what is the max number of characters that textList should hold
-				//or max number of characters that can be saved to a file
-
-
-				revertBackToEditingMode();
-
+			} else if (x.equals(fileWindowButton)) {
+				fileWindowButtonPressed();
 			}
 			return;
 
@@ -876,15 +1030,19 @@ public class Helper {
 				}
 			} else if (x.equals(saveButton) || x.equals(boxSave)) {
 				System.out.println("SAVE TO FILE HERE");
-				revertBackToSavingMode();
-
+				if (textList.size() == 0 || text.numLetters==0)
+					return;//this is because Buffer Size has to be greater than 0 in FileHelper class
+				revertBackToFileMode(true);
 				//fileWindow and closeFileWindowButton are only added to canvas (add()) when save button is clicked
+			} else if (x.equals(readButton) || x.equals(boxRead)) {
+				System.out.println("NEED  TO READ FROM A FILE HEERE");
+				revertBackToFileMode(false);
 			}
 		}
 	}
 
 	public static String setTextListToString() {
-		
+
 		String str = "";
 		if (textList == null || textList.size() == 0) {
 			str = "EMPTY";
@@ -901,7 +1059,7 @@ public class Helper {
 		 * So, we can have a String with the length of 2,147,483,647 characters, theoretically.
 		 */
 		//text.numLetters<=Integer.MAX_VALUE
-		
+
 		Set<Integer> keys = textList.keySet();
 		//ArrayList<Integer> orderedKeys = new ArrayList(new TreeSet(keys));
 		TreeSet<Integer> orderedKeys = new TreeSet(keys);
@@ -921,7 +1079,7 @@ public class Helper {
 			}
 		}
 		return str;
-	
+
 	}
 
 
@@ -946,6 +1104,9 @@ public class Helper {
 		return null;
 	}
 
+	public static int getCurrentColSaveMode() {
+		return (int) (cursor.getX()/cursor.getWidth()) - (int) ((width/8)/cursor.getWidth())-1;
+	}
 
 
 	public static GRectID getGRectIDAtCursor() {
