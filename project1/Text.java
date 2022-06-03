@@ -10,6 +10,8 @@ import java.util.Map;
 
 import acm.graphics.GCanvas;
 import acm.graphics.GLine;
+
+
 public  class Text {
 	GCanvas canvas;
 
@@ -25,15 +27,22 @@ public  class Text {
 			this.y = y;
 		}
 	}
-	private static int id = 0;//is used in delete key method but might be a better way 
+	private static int id = 0;//is used in delete key method but might be a better way
 	public int numLetters = 0;
 	public Map<Integer, ArrayList<Letter>> textList = new HashMap<Integer, ArrayList<Letter>>();
 	public Map<Integer, ArrayList<Letter>> getTextList(){
 		return textList;
 	}
+
+	/*
+	NEED TO:
+	could connect each cursive letter from left and right by having 1 extra line per side for each letter
+	 */
+
 	public int delete(int id, Integer row) {
-		//paramters id and row indicate that this method is called in editing mode
-		//MAYBE DONT NEED GRECTIDS AT ALL IF LETTER IS PASSED AS A PARAMETER
+		//parameters id and row indicate that this method is called in editing mode
+		//MAYBE DONT NEED GRECTIDS in this method IF LETTER IS PASSED AS A PARAMETER
+		//(would still need grect ids for highlighting letters for copy paste etc)
 		ArrayList<Letter> l = textList.get(row);
 		if (l==null) {
 			return 0;
@@ -58,7 +67,7 @@ public  class Text {
 		return 0;
 
 	}
-	
+
 
 	public void addLetterEditMode(double startX, double startY, double cursorLength, Integer row, char c, int index) {
 		//there are Row or index parameters because this function is only called in editing text mode
@@ -66,22 +75,23 @@ public  class Text {
 		GRectID grectID = new GRectID(startX, startY-cursorLength, cursorLength, cursorLength, id);//GRectID added to canvas in in Letter setCanvas method
 		id++;
 		Letter letter = getLetter(startX, startY, cursorLength, lineCluster, grectID, c);
+
 		ArrayList<Letter> l = textList.get(row);
 		if (l==null) {
 			textList.put(row, new ArrayList<Letter>());
 			l = textList.get(row);
 		}
-	
+
 			l.add(index, letter);
-		
+
 		textList.put(row, l);
 		numLetters++;
-		
+
 	}
-	
+
 	public void addLetterSaveMode(double startX, double startY, double cursorLength, char c, ArrayList<Letter> filePath, int index) {
 		//no Row or index parameters because this function is only called in save file mode
-		
+
 		LineCluster lineCluster = new LineCluster(c);
 		//GRectID grectID = new GRectID(startX, startY-cursorLength, cursorLength, cursorLength, id);
 		//passing null grectID might cause a bug when trying to add a null grectID to the canvas
@@ -91,7 +101,7 @@ public  class Text {
 		System.out.println("INDEX IS : "+index);
 		filePath.add(index, letter);
 	}
-	
+
 
 	public Letter getLetter(double startX, double startY, double cursorLength, LineCluster lineCluster, GRectID grectID, char c){
 		Letter letter = new Letter(lineCluster, grectID);
@@ -121,10 +131,44 @@ public  class Text {
 		else if (c=='X') return getLetterX(startX,  startY,  cursorLength,  letter);
 		else if (c=='Y') return getLetterY(startX,  startY,  cursorLength,  letter);
 		else if (c=='Z') return getLetterZ(startX,  startY,  cursorLength,  letter);
+		else if (c=='a') return getLettera( startX,  startY,  cursorLength,  letter);
+		else if (c=='b') return getLetterb( startX,  startY,  cursorLength,  letter);
+		else if (c=='c') return getLetterc( startX,  startY,  cursorLength,  letter);
+		else if (c=='d') return getLetterd( startX,  startY,  cursorLength,  letter);
+		else if (c=='e') return getLettere( startX,  startY,  cursorLength,  letter);
+		else if (c=='f') return getLetterf( startX,  startY,  cursorLength,  letter);
+		else if (c=='g') return getLetterg( startX,  startY,  cursorLength,  letter);
+		else if (c=='h') return getLetterh( startX,  startY,  cursorLength,  letter);
+		else if (c=='i') return getLetteri( startX,  startY,  cursorLength,  letter);
+		else if (c=='j') return getLetterj( startX,  startY,  cursorLength,  letter);
+		else if (c=='k') return getLetterk( startX,  startY,  cursorLength,  letter);
+		else if (c=='l') return getLetterl( startX,  startY,  cursorLength,  letter);
+		else if (c=='m') return getLetterm( startX,  startY,  cursorLength,  letter);
+		else if (c=='n') return getLettern( startX,  startY,  cursorLength,  letter);
+		else if (c=='o') return getLettero( startX,  startY,  cursorLength,  letter);
+		else if (c=='p') return getLetterp( startX,  startY,  cursorLength,  letter);
+		else if (c=='q') return getLetterq( startX,  startY,  cursorLength,  letter);
+		else if (c=='r') return getLetterr( startX,  startY,  cursorLength,  letter);
+		else if (c=='s') return getLetters( startX,  startY,  cursorLength,  letter);
+		else if (c=='t') return getLettert( startX,  startY,  cursorLength,  letter);
+		else if (c=='u') return getLetteru( startX,  startY,  cursorLength,  letter);
+		else if (c=='v') return getLetterv( startX,  startY,  cursorLength,  letter);
+		else if (c=='w') return getLetterw( startX,  startY,  cursorLength,  letter);
+		else if (c=='x') return getLetterx( startX,  startY,  cursorLength,  letter);
+		else if (c=='y') return getLettery( startX,  startY,  cursorLength,  letter);
+		else if (c=='z') return getLetterz( startX,  startY,  cursorLength,  letter);
 		else if (c=='/') return getSlash(startX,  startY,  cursorLength,  letter);
-		else if (c==' ') return letter;
+		else if (c==' ') return letter;//space is letter with no lines
 		else if (c=='-') return getMinus(startX,  startY,  cursorLength,  letter);
 		else if (c=='.') return getPeriod(startX,  startY,  cursorLength,  letter);
+		else if (c==',') return getComma(startX,  startY,  cursorLength,  letter);
+		else if (c=='(') return getLeftParentheses(startX, startY,  cursorLength,  letter);
+		else if (c==')') return getRightParentheses(startX, startY,  cursorLength,  letter);
+		else if (c=='=') return getEqualSign(startX, startY,  cursorLength,  letter);
+		else if (c=='_') return getUnderScore(startX, startY,  cursorLength,  letter);
+		else if (c=='+') return getPlusSign(startX, startY,  cursorLength,  letter);
+		else if (c=='<') return getLessThanSign(startX, startY,  cursorLength,  letter);
+		else if (c=='>') return getGreaterThanSign(startX, startY,  cursorLength,  letter);
 		else return getLetterX(startX,  startY,  cursorLength,  letter);//x is generated for unknown chars
 			//return new Letter(lineCluster, grectID);//so if any other letter is hit space is generated
 	}
@@ -403,28 +447,474 @@ public  class Text {
 		return letter;
 	}
 
+
+	public Letter getLettera(double startX, double startY, double cursorLength, Letter letter){
+		double x = cursorLength/2;
+		Point[] points = {new Point(startX+x*7/4, startY-x*7/6), new Point(startX+x, startY-x*7/6),
+				new Point(startX+x, startY-x*7/6), new Point(startX+x/4, startY-x*5/6),
+				new Point(startX+x/4, startY-x*5/6), new Point(startX+x/4, startY-x/3),
+				new Point(startX+x/4, startY-x/3), new Point(startX+x, startY-x/4),
+				new Point(startX+x, startY-x/4), new Point(startX+x*7/4, startY-x*3/6),
+				new Point(startX+x*7/4, startY-x*3/6), new Point(startX+x*11/6, startY-x/9),
+				new Point(startX+x*7/4, startY-x*7/6), new Point(startX+x*7/4, startY-x*3/6)};
+		addGLines(points, letter);
+		return letter;
+		/*this array of points would create the letter 'a' but it would be as big as an A
+		 * because it would fill up the cursor
+		 * since 'a' needs to be 2/3 as tall as 'A', this is achieved by multipling the values that are added to starY
+		 * by 2/3 except point at height startY-x/4 (so that all letters start at same height)
+		 *
+		 * new Point(startX+x*7/4, startY-x*7/4), new Point(startX+x, startY-x*7/4),
+					new Point(startX+x, startY-x*7/4), new Point(startX+x/4, startY-x*5/4),
+					new Point(startX+x/4, startY-x*5/4), new Point(startX+x/4, startY-x/2),
+					new Point(startX+x/4, startY-x/2), new Point(startX+x, startY-x/4),
+					new Point(startX+x, startY-x/4), new Point(startX+x*7/4, startY-x*3/4),
+					new Point(startX+x*7/4, startY-x*3/4), new Point(startX+x*11/6, startY-x/6),
+					new Point(startX+x*7/4, startY-x*7/4), new Point(startX+x*7/4, startY-x*3/4)};
+		 */
+	}
+	
+	public Letter getLetterb(double startX, double startY, double cursorLength, Letter letter){
+		double x = cursorLength/2;
+		Point[] points = {new Point(startX+x/4, startY-x*7/4), new Point(startX+x/4, startY-x/4),
+				new Point(startX+x/4, startY-x/4), new Point(startX+x*3/2, startY-x/4),
+				new Point(startX+x*3/2, startY-x/4), new Point(startX+x*7/4, startY-x/2),
+				new Point(startX+x*7/4, startY-x/2), new Point(startX+x*7/4, startY-x),
+				new Point(startX+x*7/4, startY-x), new Point(startX+x*3/2, startY-x*5/4),
+				new Point(startX+x*3/2, startY-x*5/4), new Point(startX+x/4, startY-x*5/4)};
+		addGLines(points, letter);
+		//no need to scale 'b' to 2/3 in height to make it smaller because 'b' should be as big as 'B'
+		//except point at height startY-x/4 (so that all letters start at same height)
+		return letter;
+	}
+	
+	public Letter getLetterc(double startX, double startY, double cursorLength, Letter letter){
+		double x = cursorLength/2;
+		Point[] points = {new Point(startX+7*x/4, startY-7*x/6), new Point(startX+0.25*x, startY-7*x/6),
+				new Point(startX+0.25*x, startY-7*x/6), new Point(startX+0.25*x, startY-x/4),
+				new Point(startX+0.25*x, startY-x/4), new Point(startX+7*x/4, startY-x/4)};
+		addGLines(points, letter);
+		return letter;
+		//letter 'c' is letter 'C' scaled to 2/3 in height
+		//except point at height startY-x/4 (so that all letters start at same height)
+	}
+	
+	public Letter getLetterd(double startX, double startY, double cursorLength, Letter letter){
+		double x = cursorLength/2;
+		Point[] points = {new Point(startX+cursorLength-x/4, startY-x*7/4), new Point(startX+cursorLength-x/4, startY-x/4),
+				new Point(startX+cursorLength-x/4, startY-x/4), new Point(startX+cursorLength-x*3/2, startY-x/4),
+				new Point(startX+cursorLength-x*3/2, startY-x/4), new Point(startX+cursorLength-x*7/4, startY-x/2),
+				new Point(startX+cursorLength-x*7/4, startY-x/2), new Point(startX+cursorLength-x*7/4, startY-x),
+				new Point(startX+cursorLength-x*7/4, startY-x), new Point(startX+cursorLength-x*3/2, startY-x*5/4),
+				new Point(startX+cursorLength-x*3/2, startY-x*5/4), new Point(startX+cursorLength-x/4, startY-x*5/4)};
+		addGLines(points, letter);
+		return letter;
+		
+		/*
+		 * letter 'd' is letter 'b' reflected accrossed X = startX + cursorLength/2 
+		 * change startX + A to startX + cursorLength - A
+		 */
+	}
+	
+	public Letter getLettere(double startX, double startY, double cursorLength, Letter letter){
+		double x = cursorLength/2;
+		Point[] points = {new Point(startX+x/4, startY-x*2/3), new Point(startX+x, startY-x*2/3),
+				new Point(startX+x, startY-x*2/3), new Point(startX+x*6/4, startY-x*5/6),
+				new Point(startX+x*6/4, startY-x*5/6), new Point(startX+x*6/4, startY-x*6/6),
+				new Point(startX+x*6/4, startY-x*6/6), new Point(startX+x, startY-x*7/6),
+				new Point(startX+x, startY-x*7/6), new Point(startX+x*2/4, startY-x*6/6),
+				new Point(startX+x*2/4, startY-x*6/6), new Point(startX+x/4, startY-x*2/3),
+				new Point(startX+x/4, startY-x*2/3), new Point(startX+x*2/4, startY-x*2/9),
+				new Point(startX+x*2/4, startY-x*2/9), new Point(startX+x, startY-x/4),
+				new Point(startX+x, startY-x/4), new Point(startX+x*7/4, startY-x*2/6)};
+		/*letter 'e' scaled to fit cursor box: (not scaled 2/3 in height)
+	//except point at height startY-x/4 (so that all letters start at same height)
+		{new Point(startX+x/4, startY-x), new Point(startX+x, startY-x),
+				new Point(startX+x, startY-x), new Point(startX+x*6/4, startY-x*5/4),
+				new Point(startX+x*6/4, startY-x*5/4), new Point(startX+x*6/4, startY-x*6/4),
+				new Point(startX+x*6/4, startY-x*6/4), new Point(startX+x, startY-x*7/4),
+				new Point(startX+x, startY-x*7/4), new Point(startX+x*2/4, startY-x*6/4),
+				new Point(startX+x*2/4, startY-x*6/4), new Point(startX+x/4, startY-x),
+				new Point(startX+x/4, startY-x), new Point(startX+x*2/4, startY-x/3),
+				new Point(startX+x*2/4, startY-x/3), new Point(startX+x, startY-x/4),
+				new Point(startX+x, startY-x/4), new Point(startX+x*7/4, startY-x*2/4)};
+		 */
+		addGLines(points, letter);
+		return letter;
+	}
+
+	public Letter getLetterf(double startX, double startY, double cursorLength, Letter letter){
+		double x = cursorLength/2;
+		Point[] points = {new Point(startX+x, startY-x/4), new Point(startX+x, startY-x*6/4),
+				new Point(startX+x, startY-x*6/4), new Point(startX+x*5/4, startY-x*1.6),
+				new Point(startX+x*5/4, startY-x*1.6), new Point(startX+x*6/4, startY-x*7/4),
+				new Point(startX+x*6/4, startY-x*7/4), new Point(startX+x*7/4, startY-x*7/4),
+				new Point(startX+x/4, startY-x),  new Point(startX+x*7/4, startY-x)};
+		addGLines(points, letter);
+		return letter;
+	}
+
+	public Letter getLetterg(double startX, double startY, double cursorLength, Letter letter){
+		double x = cursorLength/2;
+		Point[] points = {new Point(startX+x*7/4, startY-x), new Point(startX+x*7/4, startY-x*2/4),
+					new Point(startX+x*7/4, startY-x*2/4), new Point(startX+x*5/4, startY),
+				new Point(startX+x*5/4, startY), new Point(startX+x/4, startY),
+				new Point(startX+x*7/4, startY-x), new Point(startX+x*5.5/4, startY-x*6/4),
+				new Point(startX+x*5.5/4, startY-x*6/4), new Point(startX+x*2.5/4, startY-x*6/4),
+				new Point(startX+x*2.5/4, startY-x*6/4), new Point(startX+x/4, startY-x),
+				new Point(startX+x/4, startY-x), new Point(startX+x*2.5/4, startY-x*2/4),
+				new Point(startX+x*2.5/4, startY-x*2/4), new Point(startX+x*5.5/4, startY-x*2/4),
+				new Point(startX+x*5.5/4, startY-x*2/4), new Point(startX+x*7/4, startY-x)};
+		addGLines(points, letter);
+		return letter;
+	}
+
+	public Letter getLetterh(double startX, double startY, double cursorLength, Letter letter){
+		double x = cursorLength/2;
+		Point[] points = {new Point(startX+x/4, startY-x*7/4), new Point(startX+x/4, startY-x/4),
+				new Point(startX+x/4, startY-x/4), new Point(startX+x*2/4, startY-x*3/4),
+				new Point(startX+x*2/4, startY-x*3/4), new Point(startX+x*3/4, startY-x),
+				new Point(startX+x*3/4, startY-x), 	new Point(startX+x*5/4, startY-x),
+				new Point(startX+x*5/4, startY-x), new Point(startX+x*6/4, startY-x*3/4),
+				new Point(startX+x*6/4, startY-x*3/4), new Point(startX+x*7/4, startY-x/4)};
+		addGLines(points, letter);
+		return letter;
+	}
+
+	public Letter getLetteri(double startX, double startY, double cursorLength, Letter letter){
+		double x = cursorLength/2;
+		Point[] points = {new Point(startX+x/4, startY-x/4), new Point(startX+x*3/4, startY-x/4),
+				new Point(startX+x*3/4, startY-x/4), new Point(startX+x, startY-x*2/6),
+				new Point(startX+x, startY-x*2/6), new Point(startX+x, startY-x*5/6),
+				new Point(startX+x*7/4, startY-x/4), new Point(startX+x*5/4, startY-x/4),
+				new Point(startX+x*5/4, startY-x/4), new Point(startX+x, startY-x*2/6),
+				new Point(startX+x*4.2/4, startY-x*6/4), new Point(startX+x*4.2/4, startY-x*7/4),
+				new Point(startX+x*4.2/4, startY-x*7/4), new Point(startX+x*3.8/4, startY-x*7/4),
+				new Point(startX+x*3.8/4, startY-x*7/4), new Point(startX+x*3.8/4, startY-x*6/4),
+				new Point(startX+x*3.8/4, startY-x*6/4), new Point(startX+x*4.2/4, startY-x*6/4)};
+		addGLines(points, letter);
+		return letter;
+	}
+
+	public Letter getLetterj(double startX, double startY, double cursorLength, Letter letter){
+		double x = cursorLength/2;
+		Point[] points = {new Point(startX+x*6/4, startY-x*5/4), new Point(startX+x*6/4, startY-x*2/4),
+				new Point(startX+x*6/4, startY-x*2/4), new Point(startX+x, startY),
+				new Point(startX+x, startY),  new Point(startX+x/4, startY),
+				new Point(startX+x*6.2/4, startY-x*6/4), new Point(startX+x*6.2/4, startY-x*7/4),
+				new Point(startX+x*6.2/4, startY-x*7/4), new Point(startX+x*5.8/4, startY-x*7/4),
+				new Point(startX+x*5.8/4, startY-x*7/4), new Point(startX+x*5.8/4, startY-x*6/4),
+				new Point(startX+x*5.8/4, startY-x*6/4), new Point(startX+x*6.2/4, startY-x*6/4)
+		};
+		addGLines(points, letter);
+		return letter;
+	}
+
+	public Letter getLetterk(double startX, double startY, double cursorLength, Letter letter){
+		double x = cursorLength/2;
+		Point[] points = {new Point(startX+x/4, startY-7*x/4), new Point(startX+x/4, startY-x/4),
+				new Point(startX+x/4, startY-x*2/3), new Point(startX+7*x/4, startY-7*x/6),
+				new Point(startX+x/4, startY-x*2/3), new Point(startX+7*x/4, startY-x/4)};
+		addGLines(points, letter);
+		return letter;
+		//letter 'k' is letter 'K' scaled to 2/3 in height
+		//except that vertical line is not scaled
+		//except point at height startY-x/4 (so that all letters start at same height)
+	}
+	public Letter getLetterl(double startX, double startY, double cursorLength, Letter letter){
+		double x = cursorLength/2;
+		Point[] points = {new Point(startX+x/4, startY-x/4), new Point(startX+x, startY-x*1.5/4),
+				new Point(startX+x, startY-x*1.5/4), new Point(startX+x*5.5/4, startY-x*5/4),
+				new Point(startX+x*5.5/4, startY-x*5/4), new Point(startX+x*5/4, startY-x*7/4),
+				new Point(startX+x*5/4, startY-x*7/4), new Point(startX+x*3/4, startY-x*7/4),
+				new Point(startX+x*3/4, startY-x*7/4), new Point(startX+x*2.5/4, startY-x*5/4),
+				new Point(startX+x*2.5/4, startY-x*5/4), new Point(startX+x, startY-x*1.5/4),
+				new Point(startX+x, startY-x*1.5/4), new Point(startX+x*7/4, startY-x/4)};
+		addGLines(points, letter);
+		return letter;
+	}
+
+	public Letter getLetterm(double startX, double startY, double cursorLength, Letter letter){
+		double x = cursorLength/2;
+		Point[] points = {new Point(startX+x/4, startY-x/4), new Point(startX+x/4, startY-x*7/6),
+				new Point(startX+x/4, startY-x),  new Point(startX+x*2/4, startY-x*7/6),
+				new Point(startX+x*2/4, startY-x*7/6), new Point(startX+x*3/4, startY-x*7/6),
+				new Point(startX+x*3/4, startY-x*7/6), new Point(startX+x, startY-x),
+				new Point(startX+x, startY-x), new Point(startX+x*5/4, startY-x*7/6),
+				new Point(startX+x*5/4, startY-x*7/6),  new Point(startX+x*6/4, startY-x*7/6),
+				new Point(startX+x*6/4, startY-x*7/6), new Point(startX+x*7/4, startY-x),
+				new Point(startX+x*7/4, startY-x),  new Point(startX+x*7/4, startY-x/4),
+				new Point(startX+x, startY-x), new Point(startX+x, startY-x/4)};
+		addGLines(points, letter);
+		return letter;
+		//all y for startY-y were scaled to 2/3 except for when y=x/4 (startY-x/4)
+		//(so that all letters start at same height)
+	}
+
+	public Letter getLettern(double startX, double startY, double cursorLength, Letter letter){
+		double x = cursorLength/2;
+		Point[] points = {new Point(startX+x/4, startY-x/4), new Point(startX+x/4, startY-x*7/6),
+				new Point(startX+x/4, startY-x),  new Point(startX+x*3/4, startY-x*7/6),
+				new Point(startX+x*3/4, startY-x*7/6), new Point(startX+x*5/4, startY-x*7/6),
+				new Point(startX+x*5/4, startY-x*7/6), new Point(startX+x*7/4, startY-x),
+				new Point(startX+x*7/4, startY-x), new Point(startX+x*7/4, startY-x/4)};
+		addGLines(points, letter);
+		return letter;
+		//all y for startY-y were scaled to 2/3 except for when y=x/4 (startY-x/4)
+		//(so that all letters start at same height)
+	}
+
+
+	public Letter getLettero(double startX, double startY, double cursorLength, Letter letter){
+		double x = cursorLength/2;
+		Point[] points = {new Point(startX+7*x/4, startY-x), new Point(startX+3*x/2, startY-7*x/6),
+				new Point(startX+3*x/2, startY-7*x/6), new Point(startX+x/2, startY-7*x/6),
+				new Point(startX+x/2, startY-7*x/6), new Point(startX+x/4, startY-x),
+				new Point(startX+x/4, startY-x), new Point(startX+x/4, startY-x/3),
+				new Point(startX+x/4, startY-x/3), new Point(startX+x/2, startY-x/4),
+				new Point(startX+x/2, startY-x/4), new Point(startX+3*x/2, startY-x/4),
+				new Point(startX+3*x/2, startY-x/4), new Point(startX+7*x/4, startY-x/3),
+				new Point(startX+7*x/4, startY-x/3), new Point(startX+7*x/4, startY-x)};
+		addGLines(points, letter);
+		return letter;
+		//letter 'o' is letter 'O' scaled to 2/3 in height
+		//except point at height startY-x/4 (so that all letters start at same height)
+	}
+
+	public Letter getLetterp(double startX, double startY, double cursorLength, Letter letter){
+		double x = cursorLength/2;
+		Point[] points = {new Point(startX+x/4, startY), new Point(startX+x/4, startY-7*x/6),
+				new Point(startX+x/4, startY-7*x/6), new Point(startX+6*x/4, startY-7*x/6),
+				new Point(startX+6*x/4, startY-7*x/6), new Point(startX+7*x/4, startY-6*x/6),
+				new Point(startX+7*x/4, startY-6*x/6), new Point(startX+7*x/4, startY-5*x/6),
+				new Point(startX+7*x/4, startY-5*x/6), new Point(startX+6*x/4, startY-x*2/3),
+				new Point(startX+6*x/4, startY-x*2/3), new Point(startX+x/4, startY-x*2/3)};
+		addGLines(points, letter);
+		//'p' is 'P' scaled to 2/3 and vertical line goes all the way down to startY
+		return letter;
+	}
+
+	public Letter getLetterq(double startX, double startY, double cursorLength, Letter letter){
+		double x = cursorLength/2;
+		Point[] points = {new Point(startX+x*7/4, startY), new Point(startX+x*7/4, startY-7*x/6),
+				new Point(startX+x*7/4, startY-7*x/6), new Point(startX+x*2/4, startY-7*x/6),
+				new Point(startX+x*2/4, startY-7*x/6), new Point(startX+x/4, startY-6*x/6),
+				new Point(startX+x/4, startY-6*x/6), new Point(startX+x/4, startY-5*x/6),
+				new Point(startX+x/4, startY-5*x/6), new Point(startX+x*2/4, startY-x*2/3),
+				new Point(startX+x*2/4, startY-x*2/3), new Point(startX+x*7/4, startY-x*2/3)};
+		addGLines(points, letter);
+		/*
+		 * letter 'q' is letter 'p' reflected accrossed X = startX + cursorLength/2
+		 * change startX + A to startX + cursorLength - A
+		 */
+		return letter;
+	}
+
+	public Letter getLetterr(double startX, double startY, double cursorLength, Letter letter){
+		double x = cursorLength/2;
+		Point[] points = {new Point(startX+x/4, startY-x/4), new Point(startX+x/4, startY-x*7/6),
+				new Point(startX+x/4, startY-x),  new Point(startX+x*3/4, startY-x*7/6),
+				new Point(startX+x*3/4, startY-x*7/6), new Point(startX+x*5/4, startY-x*7/6),
+				new Point(startX+x*5/4, startY-x*7/6), new Point(startX+x*7/4, startY-x)};
+		addGLines(points, letter);
+		return letter;
+		//letter 'r' is letter 'n' without rightmost vertical line
+		//all y for startY-y were scaled to 2/3 except for when y=x/4 (startY-x/4)
+		//(so that all letters start at same height)
+	}
+
+	public Letter getLetters(double startX, double startY, double cursorLength, Letter letter){
+		double x = cursorLength/2;
+		Point[] points = {new Point(startX+7*x/4, startY-x), new Point(startX+3*x/2, startY-7*x/6),
+				new Point(startX+3*x/2, startY-7*x/6), new Point(startX+x/2, startY-7*x/6),
+				new Point(startX+x/2, startY-7*x/6), new Point(startX+x/4, startY-x),
+				new Point(startX+x/4, startY-x), new Point(startX+x/4, startY-x*2/3),
+				new Point(startX+x/4, startY-x*2/3), new Point(startX+7*x/4, startY-x*2/3),
+				new Point(startX+7*x/4, startY-x*2/3), new Point(startX+7*x/4, startY-x/3),
+				new Point(startX+7*x/4, startY-x/3), new Point(startX+3*x/2, startY-x/4),
+				new Point(startX+3*x/2, startY-x/4), new Point(startX+x/2, startY-x/4),
+				new Point(startX+x/2, startY-x/4), new Point(startX+x/4, startY-x/3)};
+		addGLines(points, letter);
+		return letter;
+		//letter 's' is letter 'S' scaled to 2/3 in height
+		//except point at height startY-x/4 (so that all letters start at same height)
+	}
+
+	public Letter getLettert(double startX, double startY, double cursorLength, Letter letter){
+		double x = cursorLength/2;
+		Point[] points = {new Point(startX+x, startY-x/4), new Point(startX+x, startY-x*7/4),
+				new Point(startX+x/4, startY-x*5/4), new Point(startX+x*7/4, startY-x*5/4)};
+		addGLines(points, letter);
+		return letter;
+		//letter 's' is letter 'S' scaled to 2/3 in height
+		//except point at height startY-x/4 (so that all letters start at same height)
+	}
+
+	public Letter getLetteru(double startX, double startY, double cursorLength, Letter letter){
+		double x = cursorLength/2;
+		Point[] points = {new Point(startX+x/4, startY-7*x/6), new Point(startX+x/4, startY-x/3),
+				new Point(startX+x/4, startY-x/3), new Point(startX+x/2, startY-x/4),
+				new Point(startX+x/2, startY-x/4), new Point(startX+3*x/2, startY-x/4),
+				new Point(startX+3*x/2, startY-x/4), new Point(startX+7*x/4, startY-x/3),
+				new Point(startX+7*x/4, startY-x/3), new Point(startX+7*x/4, startY-7*x/6)};
+		addGLines(points, letter);
+		return letter;
+		//letter 'u' is letter 'U' scaled to 2/3 in height
+		//except point at height startY-x/4 (so that all letters start at same height)
+	}
+	public Letter getLetterv(double startX, double startY, double cursorLength, Letter letter){
+		double x = cursorLength/2;
+		Point[] points = {new Point(startX+x/4, startY-7*x/6), new Point(startX+x, startY-x/4),
+				new Point(startX+x, startY-x/4), new Point(startX+7*x/4, startY-7*x/6)};
+		addGLines(points, letter);
+		return letter;
+		//letter 'v' is letter 'V' scaled to 2/3 in height
+		//except point at height startY-x/4 (so that all letters start at same height)
+	}
+
+	public Letter getLetterw(double startX, double startY, double cursorLength, Letter letter){
+		double x = cursorLength/2;
+		Point[] points = {new Point(startX+x/4, startY-7*x/6), new Point(startX+x/2, startY-x/4),
+				new Point(startX+x/2, startY-x/4), new Point(startX+x, startY-5*x/6),
+				new Point(startX+x, startY-5*x/6), new Point(startX+3*x/2, startY-x/4),
+				new Point(startX+3*x/2, startY-x/4), new Point(startX+7*x/4, startY-7*x/6)};
+		addGLines(points, letter);
+		return letter;
+		//letter 'w' is letter 'W' scaled to 2/3 in height
+		//except point at height startY-x/4 (so that all letters start at same height)
+	}
+	public Letter getLetterx(double startX, double startY, double cursorLength, Letter letter){
+		double x = cursorLength/2;
+		Point[] points = {new Point(startX+x/4, startY-7*x/6), new Point(startX+7*x/4, startY-x/4),
+				new Point(startX+x/4, startY-x/4), new Point(startX+7*x/4, startY-7*x/6)};
+		addGLines(points, letter);
+		return letter;
+		//letter 'x' is letter 'X' scaled to 2/3 in height
+		//except point at height startY-x/4 (so that all letters start at same height)
+	}
+
+	public Letter getLettery(double startX, double startY, double cursorLength, Letter letter){
+		double x = cursorLength/2;
+		Point[] points = {new Point(startX+x*7/4, startY-x), new Point(startX+x*7/4, startY-x*2/4),
+				new Point(startX+x*7/4, startY-x*2/4), new Point(startX+x*5/4, startY),
+				new Point(startX+x*5/4, startY), new Point(startX+x/4, startY),
+				new Point(startX+x/4, startY-x), new Point(startX+x*2.5/4, startY-x*2/4),
+				new Point(startX+x*2.5/4, startY-x*2/4), new Point(startX+x*5.5/4, startY-x*2/4),
+				new Point(startX+x*5.5/4, startY-x*2/4), new Point(startX+x*7/4, startY-x),
+				new Point(startX+x/4, startY-x), new Point(startX+x/4, startY-x*7/6),
+				new Point(startX+x*7/4, startY-x),  new Point(startX+x*7/4, startY-x*7/6)};
+		addGLines(points, letter);
+		return letter;
+	}
+
+	public Letter getLetterz(double startX, double startY, double cursorLength, Letter letter){
+		double x = cursorLength/2;
+		Point[] points = {new Point(startX+x/4, startY-7*x/6), new Point(startX+7*x/4, startY-7*x/6),
+				new Point(startX+7*x/4, startY-7*x/6), new Point(startX+x/4, startY-x/4),
+				new Point(startX+x/4, startY-x/4), new Point(startX+7*x/4, startY-x/4),};
+		addGLines(points, letter);
+		return letter;
+		//letter 'z' is letter 'Z' scaled to 2/3 in height
+		//except point at height startY-x/4 (so that all letters start at same height)
+	}
+
+
 	public Letter getSlash(double startX, double startY, double cursorLength, Letter letter){
 		double x = cursorLength/2;
 		Point[] points = {new Point(startX+x/4, startY-x/4), new Point(startX+7*x/4, startY-7*x/4)};
 		addGLines(points, letter);
 		return letter;
 	}
+
 	public Letter getMinus(double startX, double startY, double cursorLength, Letter letter){
 		letter.addLine(new GLine(startX+cursorLength/8, startY-cursorLength/2, startX+cursorLength*7/8, startY-cursorLength/2 ));
 		return letter;
 	}
-	
+
 	public Letter getPeriod(double startX, double startY, double cursorLength, Letter letter){
 		double x = cursorLength/2;
-		Point[] points = {new Point(startX+x/4, startY-x/4), new Point(startX+x/4, startY-3*x/8), 
+		Point[] points = {new Point(startX+x/4, startY-x/4), new Point(startX+x/4, startY-3*x/8),
 				new Point(startX+x/4, startY-3*x/8), new Point(startX+3*x/8, startY-3*x/8),
 				new Point(startX+3*x/8, startY-3*x/8), new Point(startX+3*x/8, startY-x/4),
 				new Point(startX+3*x/8, startY-x/4), new Point(startX+x/4, startY-x/4)};
 		addGLines(points, letter);
-		//for now a period is a little square
+		//period is a little square
 		return letter;
 	}
 
+	public Letter getComma(double startX, double startY, double cursorLength, Letter letter){
+		double x = cursorLength/2;
+		Point[] points = {new Point(startX+x/4, startY-x/4), new Point(startX+x/4, startY-3*x/8),
+				new Point(startX+x/4, startY-3*x/8), new Point(startX+3*x/8, startY-3*x/8),
+				new Point(startX+3*x/8, startY-3*x/8), new Point(startX+3*x/8, startY-x/4),
+				new Point(startX+3*x/8, startY-x/4), new Point(startX+x/4, startY-x/4),
+				new Point(startX+x/4, startY-x/4), new Point(startX+x/8, startY-x/8)};
+		addGLines(points, letter);
+		//comma is period with extra line at left
+		return letter;
+	}
+
+	public Letter getLeftParentheses(double startX, double startY, double cursorLength, Letter letter){
+		double x = cursorLength/2;
+		Point[] points = {new Point(startX+x*7/4, startY-x*7/4), new Point(startX+x, startY-x*6/4),
+				new Point(startX+x, startY-x*6/4), new Point(startX+x*3/4, startY-x*5/4),
+				new Point(startX+x*3/4, startY-x*5/4), new Point(startX+x*3/4, startY-x*3/4),
+				new Point(startX+x*3/4, startY-x*3/4), new Point(startX+x, startY-x*2/4),
+				new Point(startX+x, startY-x*2/4), new Point(startX+x*7/4, startY-x/4)};
+		addGLines(points, letter);
+
+		return letter;
+	}
+
+	public Letter getRightParentheses(double startX, double startY, double cursorLength, Letter letter){
+		double x = cursorLength/2;
+		Point[] points = {new Point(startX+cursorLength-x*7/4, startY-x*7/4), new Point(startX+cursorLength-x, startY-x*6/4),
+				new Point(startX+cursorLength-x, startY-x*6/4), new Point(startX+cursorLength-x*3/4, startY-x*5/4),
+				new Point(startX+cursorLength-x*3/4, startY-x*5/4), new Point(startX+cursorLength-x*3/4, startY-x*3/4),
+				new Point(startX+cursorLength-x*3/4, startY-x*3/4), new Point(startX+cursorLength-x, startY-x*2/4),
+				new Point(startX+cursorLength-x, startY-x*2/4), new Point(startX+cursorLength-x*7/4, startY-x/4)};
+		addGLines(points, letter);
+		return letter;
+		/*
+		 * letter ')' is letter '(' reflected accrossed X = startX + cursorLength/2
+		 * change startX + A to startX + cursorLength - A
+		 */
+	}
+
+	public Letter getEqualSign(double startX, double startY, double cursorLength, Letter letter){
+		double x = cursorLength/2;
+		Point[] points = {new Point(startX+x/4, startY-x*5/4), new Point(startX+x*7/4, startY-x*5/4),
+				new Point(startX+x/4, startY-x*3/4), new Point(startX+x*7/4, startY-x*3/4)};
+		addGLines(points, letter);
+		return letter;
+	}
+
+	public Letter getUnderScore(double startX, double startY, double cursorLength, Letter letter){
+		double x = cursorLength/2;
+		letter.addLine(new GLine(startX+x/4, startY-x/4, startX+x*7/4, startY-x/4));
+		return letter;
+	}
+
+	public Letter getPlusSign(double startX, double startY, double cursorLength, Letter letter){
+		double x = cursorLength/2;
+		letter.addLine(new GLine(startX+x/4, startY-x, startX+x*7/4, startY-x));
+		letter.addLine(new GLine(startX+x, startY-x*7/4, startX+x, startY-x/4));
+		return letter;
+	}
+
+	public Letter getLessThanSign(double startX, double startY, double cursorLength, Letter letter){
+		double x = cursorLength/2;
+		letter.addLine(new GLine(startX+x/4, startY-x, startX+x*7/4, startY-x*7/4));
+		letter.addLine(new GLine(startX+x/4, startY-x, startX+x*7/4, startY-x/4));
+		return letter;
+	}
+
+	public Letter getGreaterThanSign(double startX, double startY, double cursorLength, Letter letter){
+		double x = cursorLength/2;
+		letter.addLine(new GLine(startX+x*7/4, startY-x, startX+x/4, startY-x*7/4));
+		letter.addLine(new GLine(startX+x*7/4, startY-x, startX+x/4, startY-x/4));
+		return letter;
+	}
 
 
 }

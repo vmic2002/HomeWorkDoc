@@ -54,96 +54,99 @@ public class HomeWorkDoc extends GraphicsProgram {
 
 
 	//not sure if static is doing anything cause HomeWorkDoc is never instantiated
-	public static final int CURSOR_SIZE = 20;//was be 40, made it 20 so that more characters could fit in a single line
-	public static final int SAVE_MODE_CURSOR_SIZE = CURSOR_SIZE/2;//cursor is smaller in save mode
-	public static final int  WIDTH = 50*CURSOR_SIZE;//was be 25* CURSOR_SIZE
-	public static final int HEIGHT = 30*CURSOR_SIZE;//was be 15*CURSOR_SIZE
+	public static final int CURSOR_SIZE = 20;//should be 20
+	public static final int FILE_MODE_CURSOR_SIZE = CURSOR_SIZE/2;//cursor is smaller in file mode
+	public static final int  WIDTH = 50*CURSOR_SIZE;//should be 50* CURSOR_SIZE
+	public static final int HEIGHT = 30*CURSOR_SIZE;//should be 30*CURSOR_SIZE
+	boolean capsMode = false;//capsMode is true if user is holding down shift key or if caps lock key has been pressed
 
 	private class MyKeyListener implements KeyListener {
 
 		@Override
 		public void keyPressed(KeyEvent e) {
-
+		//	System.out.print("PRESSED");
+		
+			
 			int keyCode = e.getKeyCode();
 			char c = ' ';
 			boolean isLetter = false;
 			if (keyCode == KeyEvent.VK_A) {
-				c = 'A';
+				c = 'a';
 				isLetter = true;
 			} else if (keyCode == KeyEvent.VK_B) {
-				c = 'B';
+				c = 'b';
 				isLetter = true;
 			}else if (keyCode == KeyEvent.VK_C) {
-				c = 'C';
+				c = 'c';
 				isLetter = true;
 			}else if (keyCode == KeyEvent.VK_D) {
-				c = 'D';
+				c = 'd';
 				isLetter = true;
 			}else if (keyCode == KeyEvent.VK_E) {
-				c = 'E';
+				c = 'e';
 				isLetter = true;
 			}else if (keyCode == KeyEvent.VK_F) {
-				c = 'F';
+				c = 'f';
 				isLetter = true;
 			}else if (keyCode == KeyEvent.VK_G) {
-				c = 'G';
+				c = 'g';
 				isLetter = true;
 			}else if (keyCode == KeyEvent.VK_H) {
-				c = 'H';
+				c = 'h';
 				isLetter = true;
 			}else if (keyCode == KeyEvent.VK_I) {
-				c = 'I';
+				c = 'i';
 				isLetter = true;
 			}else if (keyCode == KeyEvent.VK_J) {
-				c = 'J';
+				c = 'j';
 				isLetter = true;
 			}else if (keyCode == KeyEvent.VK_K) {
-				c = 'K';
+				c = 'k';
 				isLetter = true;
 			}else if (keyCode == KeyEvent.VK_L) {
-				c = 'L';
+				c = 'l';
 				isLetter = true;
 			}else if (keyCode == KeyEvent.VK_M) {
-				c = 'M';
+				c = 'm';
 				isLetter = true;
 			}else if (keyCode == KeyEvent.VK_N) {
-				c = 'N';
+				c = 'n';
 				isLetter = true;
 			}else if (keyCode == KeyEvent.VK_O) {
-				c = 'O';
+				c = 'o';
 				isLetter = true;
 			}else if (keyCode == KeyEvent.VK_P) {
-				c = 'P';
+				c = 'p';
 				isLetter = true;
 			}else if (keyCode == KeyEvent.VK_Q) {
-				c = 'Q';
+				c = 'q';
 				isLetter = true;
 			}else if (keyCode == KeyEvent.VK_R) {
-				c = 'R';
+				c = 'r';
 				isLetter = true;
 			}else if (keyCode == KeyEvent.VK_S) {
-				c = 'S';
+				c = 's';
 				isLetter = true;
 			}else if (keyCode == KeyEvent.VK_T) {
-				c = 'T';
+				c = 't';
 				isLetter = true;
 			}else if (keyCode == KeyEvent.VK_U) {
-				c = 'U';
+				c = 'u';
 				isLetter = true;
 			}else if (keyCode == KeyEvent.VK_V) {
-				c = 'V';
+				c = 'v';
 				isLetter = true;
 			}else if (keyCode == KeyEvent.VK_W) {
-				c = 'W';
+				c = 'w';
 				isLetter = true;
 			}else if (keyCode == KeyEvent.VK_X) {
-				c = 'X';
+				c = 'x';
 				isLetter = true;
 			}else if (keyCode == KeyEvent.VK_Y) {
-				c = 'Y';
+				c = 'y';
 				isLetter = true;
 			}else if (keyCode == KeyEvent.VK_Z) {
-				c = 'Z';
+				c = 'z';
 				isLetter = true;
 			} else if (keyCode == KeyEvent.VK_SPACE) {
 				c = ' ';
@@ -152,14 +155,33 @@ public class HomeWorkDoc extends GraphicsProgram {
 				c = '/';
 				isLetter = true;
 			}else if (keyCode == KeyEvent.VK_MINUS) {
-				c = '-';
+				if (capsMode) c = '_';
+				else c = '-';
 				isLetter = true;
 			}else if (keyCode == KeyEvent.VK_PERIOD) {
-				c = '.';
+				if (capsMode) c = '>';
+				else c = '.';
+				isLetter = true;
+			}else if (keyCode == KeyEvent.VK_COMMA) {
+				if (capsMode) c = '<';
+				else c = ',';
+				isLetter = true;
+			}else if (keyCode == KeyEvent.VK_9 && capsMode) {
+				c = '(';
+				isLetter = true;
+			}else if (keyCode == KeyEvent.VK_0 && capsMode) {
+				c = ')';
+				isLetter = true;
+			}else if (keyCode == KeyEvent.VK_EQUALS) {
+				if (capsMode) c = '+';
+				else c = '=';
 				isLetter = true;
 			}
-			
+
+
 			if (isLetter) {
+				if (capsMode)
+					c = Character.toUpperCase(c);
 				System.out.println(c+" IS ADDED");
 				Helper.addLetter(c);
 			} else if (keyCode == KeyEvent.VK_LEFT) {
@@ -176,13 +198,27 @@ public class HomeWorkDoc extends GraphicsProgram {
 				Helper.downKey();
 			} else if (keyCode == KeyEvent.VK_ENTER) {
 				Helper.enter();
+			} else if (keyCode == KeyEvent.VK_CAPS_LOCK || keyCode == KeyEvent.VK_SHIFT ) {
+				capsMode = true;
+				System.out.println("CAPS MODE IS TRUE");
 			} 
-			
+		
 		}
 		@Override
-		public void keyReleased(KeyEvent e) {}
+		public void keyReleased(KeyEvent e) {
+			//System.out.println("RELEASED");
+		int keyCode = e.getKeyCode();	
+		if (keyCode == KeyEvent.VK_CAPS_LOCK || keyCode == KeyEvent.VK_SHIFT) {
+				capsMode = false;
+				System.out.println("CAPS MODE IS false");
+			} 
+		}
 		@Override
-		public void keyTyped(KeyEvent e) {}
+		public void keyTyped(KeyEvent e) {
+			//System.out.print("TYPED");
+		//	int keyCode = e.getKeyCode();
+	 
+		}
 	}
 
 	private class MyMouseListener implements MouseListener{
@@ -225,7 +261,7 @@ public class HomeWorkDoc extends GraphicsProgram {
 		addMouseListeners(new MyMouseListener());
 
 		setSize(WIDTH,HEIGHT);
-
+		
 		CursorCoordinates coord = new CursorCoordinates(0,0);
 		//make button that allows user to change size of cursor
 
@@ -343,10 +379,12 @@ public class HomeWorkDoc extends GraphicsProgram {
 		Map<Integer, ArrayList<Letter>> textList = text.getTextList();
 
 		this.setBackground(Color.BLACK);
+		
+		System.out.println("HEIGHT: "+getHeight() + ", WIDTH: "+getWidth());
 
 		Helper.setObjects(text, cursor, saveButton, boxSave, upButton, downButton, textList, coord, getWidth(),
 				getHeight(), this.getGCanvas(), fileWindow, closeFileWindowButton, inFileWindow, saveOrReadMode, filePath, fileWindowText,
-				fileWindowButton, CURSOR_SIZE, SAVE_MODE_CURSOR_SIZE, fileWindowErrorMsg, saveModeText, modeTextWindow,
+				fileWindowButton, CURSOR_SIZE, FILE_MODE_CURSOR_SIZE, fileWindowErrorMsg, saveModeText, modeTextWindow,
 				readButton, boxRead, readModeText);
 		while (true) {
 			cursor.thinCursor.setVisible(!cursor.thinCursor.isVisible());

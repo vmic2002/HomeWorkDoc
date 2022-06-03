@@ -1,5 +1,5 @@
 
-//import java.awt.Color;
+import java.awt.Color;
 
 import acm.graphics.GRect;
 //import acm.graphics.GCanvas;
@@ -21,8 +21,8 @@ public class GRectID extends GRect{
 	public GRectID(double arg0, double arg1, double arg2, double arg3, int id) {//delete this constructor if GRectID does not extends GRect
 		super(arg0, arg1, arg2, arg3);
 		this.setVisible(false);//set to true to highlight letters
-		//this.setFillColor(Color.BLUE);
-		//this.setFilled(false);
+		this.setFillColor(Color.BLUE);
+		this.setFilled(true);
 
 		/*
 		 * (un)comment code above for highlight

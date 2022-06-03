@@ -76,11 +76,44 @@ public class Helper {
 	 *BE ABLE TO DO COMMANT T AND COMMAND W TO OPEN OTHER WINDOWS OF TEXT DOCUMENTS (COULD HAVE A COMMAND THAT OPEN ANOTHER
 	 *WINDOW BUT A GAME SHOWS UP. YOU COULD DO COMMAND W TO GET RID OF IT AND GO BACK TO TEXT WINDOW BUT THIS GAME COUKD BE
 	 *THE NEXT BIG PROJECT U DO
+	 *
+	 * IMPLEMENT TAB KEY (COULD JUST BE 5 SPACES BUT SPACES CONTAIN A BOOLEAN WHICH IS TRUE IF PART OF TAB)
+	 * would be useful to implement tab key if we want to import code into this text editor
 	 */
 
+
+	/**
+	 * 
+	 * @param text1
+	 * @param cursor1
+	 * @param saveButton1
+	 * @param boxSave1
+	 * @param upButton1
+	 * @param downButton1
+	 * @param textList1
+	 * @param coord1
+	 * @param getWidth
+	 * @param getHeight
+	 * @param canvas1
+	 * @param fileWindow1
+	 * @param closeFileWindowButton1
+	 * @param inFileWindow1
+	 * @param saveOrReadMode1
+	 * @param filePath1
+	 * @param fileWindowText1
+	 * @param fileWindowButton1
+	 * @param editModeCursorSize1
+	 * @param saveModeCursorSize1
+	 * @param fileWindowErrorMsg1
+	 * @param saveModeText1
+	 * @param modeTextWindow1
+	 * @param readButton1
+	 * @param boxRead1
+	 * @param readModeText1
+	 */
 	public static void setObjects(Text text1, Cursor cursor1, GLabel saveButton1, GRect boxSave1, GRect upButton1, 
 			GRect downButton1, Map<Integer, ArrayList<Letter>> textList1, CursorCoordinates coord1, int getWidth, 
-			int getHeight, GCanvas g, GRect fileWindow1, GRect closeFileWindowButton1, Boolean inFileWindow1, Boolean saveOrReadMode1,
+			int getHeight, GCanvas canvas1, GRect fileWindow1, GRect closeFileWindowButton1, Boolean inFileWindow1, Boolean saveOrReadMode1,
 			ArrayList<Letter> filePath1, GLabel fileWindowText1, GRect fileWindowButton1, int editModeCursorSize1,
 			int saveModeCursorSize1, GLabel fileWindowErrorMsg1, GLabel saveModeText1, GRect modeTextWindow1,
 			GLabel readButton1, GRect boxRead1, GLabel readModeText1) {
@@ -94,7 +127,7 @@ public class Helper {
 		coord = coord1;
 		height = getHeight;
 		width = getWidth;
-		canvas = g;
+		canvas = canvas1;
 		lastRow = 0;
 		smallestRow = 0;
 		fileWindow = fileWindow1;
@@ -114,8 +147,9 @@ public class Helper {
 		readModeText = readModeText1;
 	}
 
+
 	public static void printOutText() {
-		System.out.println("COL" + coord.col + " ROW" + coord.row);
+		//System.out.println("COL" + coord.col + " ROW" + coord.row);
 		if (textList == null) {
 			System.out.println("textListNull");
 			return;
@@ -133,7 +167,7 @@ public class Helper {
 			System.out.println("ROW>>" + key + " Size: " + size);
 			if (textList.get(key) != null) {
 				for (Letter l : textList.get(key)) {
-					System.out.print(" CHAR>>" + l.getLineCluster().getChar());
+					System.out.print(l.getLineCluster().getChar());
 					//System.out.print("<<ID>>"+l.getGRectID().getID()+"<<Y>>"+l.getGRectID().getY()+"<<X>>"+l.getGRectID().getX()+"<<");
 
 				}
@@ -144,13 +178,15 @@ public class Helper {
 		System.out.println("SMALLEST ROW IS " + smallestRow);
 		System.out.println("WIDTH: "+width);
 		System.out.println("HEIGHT: "+height);
-		System.out.println("Cursor width: "+cursor.getWidth());
-		System.out.println("Cursor height: "+cursor.getHeight());
+		System.out.println("cursor row: "+coord.row);
+		System.out.println("cursor col: "+coord.col);
+		//System.out.println("Cursor width: "+cursor.getWidth());
+		//System.out.println("Cursor height: "+cursor.getHeight());
 		//System.out.println((cursor.getY() < height-cursor.getHeight()) + "<<>>"+ (coord.row == lastRow));
 
 	}
 
-	/**
+	/**Moves cursor up or down depending on param i
 	 * @param i - is -1 for upKey and 1 for downKey
 	 */
 	public static void upOrDownKey(int i) {
@@ -179,6 +215,10 @@ public class Helper {
 		coord.row += i;
 	}
 
+
+	/**
+	 * up key pressed
+	 */
 	public static void upKey() {
 		if (inFileWindow)
 			return;
@@ -192,7 +232,9 @@ public class Helper {
 		}
 	}
 
-
+	/**
+	 * down key pressed
+	 */
 	public static void downKey() {
 		if (inFileWindow)
 			return;
@@ -205,6 +247,9 @@ public class Helper {
 		}
 	}
 
+	/**
+	 * left key pressed
+	 */
 	public static void leftKey() {
 		if (inFileWindow) {
 			//if ((int) (cursor.getX()/cursor.getWidth()) > (int) ((width/4)/cursor.getWidth())+1)
@@ -228,6 +273,9 @@ public class Helper {
 		}
 	}
 
+	/**
+	 * right key pressed
+	 */
 	public static void rightKey() {
 		if (inFileWindow) {
 			//int currentCol  = (int) (cursor.getX()/cursor.getWidth()) - (int) ((width/4)/cursor.getWidth())-1;
@@ -248,6 +296,9 @@ public class Helper {
 		}
 	}
 
+	/**
+	 * return key pressed
+	 */
 	public static void enter() {
 		if (inFileWindow)
 			return;
@@ -280,7 +331,7 @@ public class Helper {
 
 				for (int i = coord.col; i < temp.size(); i++) {
 					letters.add(temp.get(i));
-				}
+				} 
 				//WHAT IF LETTERS.SIZE()==0??
 				if (letters.size() != 0) {
 					double dx = -letters.get(0).getGRectID().getX();
@@ -344,26 +395,18 @@ public class Helper {
 	}
 
 
+	/**
+	 * delete key pressed
+	 */
 	public static void deleteKey() {
 		if (inFileWindow) {
 			deleteKeyInSaveMode();
 			return;
 		}
-		GObject a = canvas.getElementAt(cursor.getX() - 0.4 * cursor.getWidth(), cursor.getY() + 0.6 * cursor.getHeight());
+		//GObject a = canvas.getElementAt(cursor.getX() - 0.4 * cursor.getWidth(), cursor.getY() + 0.6 * cursor.getHeight());
+		GRectID a = getGRectIDAt(cursor.getX() - 0.4 * cursor.getWidth(), cursor.getY() + 0.6 * cursor.getHeight());
 		if (a != null) {
-			int index2;
-			if (a instanceof GLine) {
-				canvas.remove(a);
-				canvas.remove(cursor);
-				GObject b = canvas.getElementAt(cursor.getX() - 0.4 * cursor.getWidth(), cursor.getY() + 0.6 * cursor.getHeight());
-				canvas.add(cursor);
-				canvas.add(a);
-				int id = ((GRectID) b).getID();
-				index2 = text.delete(Integer.valueOf(id), coord.row);
-			} else {
-				int id = ((GRectID) a).getID();
-				index2 = text.delete(Integer.valueOf(id), coord.row);
-			}
+			int index2 = text.delete(Integer.valueOf(a.getID()), coord.row);
 			ArrayList<Letter> tempList = textList.get(Integer.valueOf(coord.row));
 			for (int i = index2; i < tempList.size(); i++) {
 				tempList.get(i).move(-cursor.getWidth(), 0);
@@ -475,6 +518,7 @@ public class Helper {
 		lastRow--;
 	}
 
+	
 	public static void deleteKeyInSaveMode() {
 		//int currentCol  = (int) (cursor.getX()/cursor.getWidth()) - (int) ((width/4)/cursor.getWidth())-1;
 
@@ -498,7 +542,7 @@ public class Helper {
 
 
 	/**
-	 * 
+	 * does not remove letter from a data structure (textList or filePath)
 	 * @param letter to be removed from canvas
 	 */
 	public static void deleteLetter(Letter letter) {
@@ -511,6 +555,10 @@ public class Helper {
 	}
 
 
+	/**
+	 * 
+	 * @param c char to be added to canvas and textList or filePath
+	 */
 	public static void addLetter(char c) {
 
 		//if inFileWindow is false, then HomeWorkDoc is in editing mode, not saving mode or read from file mode
@@ -521,6 +569,10 @@ public class Helper {
 			addLetterEditingMode(c);
 	}
 
+	/**
+	 * 
+	 * @param c char to be added to canvas and filePath
+	 */
 	public static void addLetterSavingMode(char c) {
 
 		//BUG NOT REMOVING LAST LETTER OF FILEPATH CORRECTLY
@@ -553,11 +605,35 @@ public class Helper {
 	}
 
 
+	/**
+	 * 
+	 * @param c char to be added to canvas and textList
+	 */
 	public static void addLetterEditingMode(char c) {
 
 		if (coord.col == width / cursor.getWidth() - 1) {
-			moveCursorDownAndLeft();
+			if (coord.row == (int) (height / cursor.getHeight())) {
+				//WHEN CURSOR IS ON LAST ROW OF GCANVAS AND LAST COL AND LETTERS ARE TYPED THE TEXT SHOULD BE
+				//MOVED UP
+				moveTextUp();
+
+				lastRow++;//to counter the lastRow-- in moveTextUp
+				//NEED TO FIX BUG HERE: LASTROWW++ SHOULD NOT BE DONE IF THERE ARE MORE LINES BELOW THE SCREEN
+				//FOR NOW AN EXTRA LINE IS ADDED AT THE END OF TEXTLIST (LASTROW++ IS DONE WHEN IT SHOULDNT BE DONE)
+
+				cursor.changeLocation(0, cursor.getY());
+				coord.col = 0;
+
+			} else {
+				moveCursorDownAndLeft();
+			}
+			ArrayList<Letter> temp = textList.get(Integer.valueOf(coord.row));
+			if ((temp == null || temp.size() == 0) && coord.row < lastRow) {
+				System.out.println("THIS SHOUDL HAPPPPPPPPPPEN SOME TIMEMEMEMMEMEME");
+				moveTextDown(coord.row + 1);
+			}
 			//System.out.println("1111111111ERRORORORROROROROROROROROROROROROR");
+
 		}
 		canvas.remove(cursor);
 		GObject o = canvas.getElementAt(cursor.getX() + cursor.getWidth() / 2, cursor.getY() + cursor.getHeight() / 2);
@@ -580,12 +656,23 @@ public class Helper {
 		if (cursor.getX() < width -  cursor.getWidth()){
 			moveCursorRight();
 		} else {
-			//System.out.println("GOT HEREREREREERERERRERERERRERERET");
+			//MIGHT BE ABLE TO REMOVE THIS WHOLE ELSE STATMENT
+			System.out.println("THIS SHOULD NEVER HAPPPPPPPPPPPPPPPPPPPPPPPPPPPEN?????");
+			/*
+			System.out.println("GOT HEREREREREERERERRERERERRERERET");
 
 
 			//System.out.println("HEIGHT/CURSORHEIGHT>>" + height / cursor.getHeight());
 			//System.out.println("CURSOR ROW>>" + coord.row);
+			System.out.println("BUGGGGGGGGGGG");
+			System.out.println("coord row: "+ coord.row);
+			//System.out.println("last possible row: "+((int) (height / cursor.getHeight())-1));
+
 			if (coord.row == (int) (height / cursor.getHeight())) {
+				//THIS IF STATEMENT MIGHT NOT BE NECCESSARY
+				//if statement at beginning of method might cover this:
+				 //WHEN CURSOR IS ON LAST ROW OF GCANVAS AND LAST COL AND LETTERS ARE TYPED THE TEXT SHOULD BE
+				//MOVED UP BUT
 				moveTextUp();
 				lastRow++;//to counter the lastRow-- in moveTextUp
 				//cursor.setLocation(0, cursor.getY());
@@ -594,14 +681,21 @@ public class Helper {
 
 			} else {
 				moveCursorDownAndLeft();
+
 			}
 			ArrayList<Letter> temp = textList.get(Integer.valueOf(coord.row));
 			if ((temp == null || temp.size() == 0) && coord.row < lastRow) {
+				System.out.println("THIS SHOUDL HAPPPPPPPPPPEN SOME TIMEMEMEMMEMEME");
 				moveTextDown(coord.row + 1);
 			}
+			 */
 		}
 	}
 
+	/**
+	 * 
+	 * @param row row number to check if last letter in row needs to be moved to beginning of row+1
+	 */
 	public static void checkIfTooManyLettersInLine(int row) {
 
 		/*
@@ -684,6 +778,9 @@ public class Helper {
 		lastRow++;
 	}
 
+	/**
+	 * move all rows of textList up by one unit of cursorLength
+	 */
 	public static void moveTextUp() {
 		System.out.println("SHOULD MOVE TEXT UP HERERERE");
 		for (int i = smallestRow; i <= lastRow; i++) {
@@ -732,6 +829,10 @@ public class Helper {
 		return lastRow;
 	}
 
+	/**
+	 * moves cursor along if text is being moved up or down
+	 * so that it is still visible
+	 */
 	public static void upAndDownButtonHelper() {
 		canvas.remove(cursor);
 		GObject o1 = canvas.getElementAt(cursor.getX() + cursor.getWidth() / 2, cursor.getY() + cursor.getHeight() / 2);
@@ -745,6 +846,9 @@ public class Helper {
 
 	}
 
+	/**
+	 * move cursor to the right of the rightmost char in row
+	 */
 	public static void moveCursorToRightmostPosition() {
 		ArrayList<Letter> temp = textList.get(Integer.valueOf(coord.row));
 		int col;
@@ -757,6 +861,7 @@ public class Helper {
 		cursor.changeLocation(col * cursor.getWidth(), cursor.getY());
 		coord.col = col;
 	}
+	
 
 	public static void revertBackToEditingMode() {
 		//this function allows user to go back to editing mode
@@ -888,9 +993,7 @@ public class Helper {
 					//System.out.println();
 				}
 				else {
-					c = Character.toUpperCase(c);//because un capitalized letters arent supported
-					//by homeworkdoc yet 
-					
+
 					addLetterEditingMode(c);
 					//System.out.print(c);
 					//if char is unknown, X will be printed to text
@@ -913,11 +1016,14 @@ public class Helper {
 			revertBackToFileMode(false);
 
 
-			
+
 		}
 		return arr[1];
 	}
 
+	/**
+	 * save/read to file depending on value of saveOrReadMode
+	 */
 	public static void fileWindowButtonPressed() {
 		System.out.println("FILE BUTTON PRESSED");
 
@@ -967,33 +1073,32 @@ public class Helper {
 
 		}
 		if (e.getX() < width - cursor.getWidth()) {
+			GRectID a = getGRectIDAt(e.getX(), e.getY());
 			int rowT = (int) (e.getY() / cursor.getHeight());
 			int column = (int) (e.getX() / cursor.getWidth());
 			if (rowT > Helper.getLastRow()) {
-				//System.out.println("SCENARIO row>lastRow");
-
 				ArrayList<Letter> lastRow = textList.get(Helper.getLastRow());
 				rowT = Helper.getLastRow();
 				if (lastRow == null) {
 					column = 0;
 				} else if (column >= lastRow.size())
 					column = lastRow.size();
-				cursor.changeLocation(cursor.getWidth() * column, cursor.getHeight() * rowT);
-			} else if (getGRectIDAt(1.0 * e.getX(), 1.0 * e.getY()) != null) {
-				//  System.out.println("SCENARIO GRECTID IS  NOT  NULL HERE");
-				cursor.changeLocation(cursor.getWidth() * column, cursor.getHeight() * rowT);
-			} else {
-				// System.out.println("SCENARIO GRECTID IS NULL HERE");
+			}
+			if (a!=null){
+				cursor.changeLocation(a.getX(), a.getY());
+			}else{
 				ArrayList<Letter> letters = textList.get(Integer.valueOf(rowT));
 				double x;
 				if (letters == null || letters.size() == 0) {
 					x = 0;
 					column = 0;
 				} else {
-					x = letters.get(letters.size() - 1).getGRectID().getX() + cursor.getWidth();
-					column = (int) (x / cursor.getWidth());
+					if (column>=letters.size()) {
+						x = letters.get(letters.size() - 1).getGRectID().getX() + cursor.getWidth();
+						column = (int) (x / cursor.getWidth());
+					}
 				}
-				cursor.changeLocation(x, cursor.getHeight() * rowT);
+				cursor.changeLocation(cursor.getWidth() * column, cursor.getHeight() * rowT);
 			}
 			coord.row = rowT;
 			coord.col = column;
@@ -1040,13 +1145,18 @@ public class Helper {
 			}
 		}
 	}
-
+	
+	
+	/**
+	 * 
+	 * @return String comprised of all chars in textList, including '\n'
+	 */
 	public static String setTextListToString() {
 
 		String str = "";
 		if (textList == null || textList.size() == 0) {
 			str = "EMPTY";
-			//Feauture: trying to save a file if textlist is empty will create a file that contains word EMPTY
+			//will never happen because user cannot change to save mode if text is empty
 			return str;
 		}
 		//to check :WHETHER THE NUMBER OF CHARS IS GETTING TOO BIG FOR A SINGLE STRING TO HOLD
@@ -1083,27 +1193,34 @@ public class Helper {
 	}
 
 
-
+/**]
+ * 
+ * @param x
+ * @param y
+ * @return GRectID at x, y coordinate, null if none exists
+ */
 	public static GRectID getGRectIDAt(double x, double y) {
 		canvas.remove(cursor);
 		GObject a = canvas.getElementAt(x, y);
-		canvas.add(cursor);
+		//canvas.add(cursor);
 		if (a != null) {
 			if (a instanceof GLine) {
 				canvas.remove(a);
-				canvas.remove(cursor);
-				GObject b = canvas.getElementAt(x, y);
-				canvas.add(cursor);
+				//canvas.remove(cursor);
+				GRectID b = getGRectIDAt(x,y);
 				canvas.add(a);
-				return ((GRectID) b);
-
+				canvas.add(cursor);
+				return (b);
 			} else {
 				return ((GRectID) a);
 			}
 		}
 		return null;
 	}
-
+	
+	/**
+	 * @return col of cursor in save mode or index of filePath
+	 */
 	public static int getCurrentColSaveMode() {
 		return (int) (cursor.getX()/cursor.getWidth()) - (int) ((width/8)/cursor.getWidth())-1;
 	}
